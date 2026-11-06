@@ -131,3 +131,9 @@ test('Close comes before Reset Everything in the Settings dialog', () => {
     const buttons = [...markupOfDialog('settingsModal').matchAll(/<label class="exerciseModalBtn" id="(\w+)"/g)].map((match) => match[1]);
     assert.deepEqual(buttons, ['closeSettingsBtn', 'resetBtn']);
 });
+
+test('every way back out of a dialog is labelled Go Back', () => {
+    for (const buttonId of ['cancelDecidingNewWorkoutBtn', 'closeSettingsBtn', 'cancelResetBtn']) {
+        assert.match(pageMarkup, new RegExp(`id="${buttonId}"[^<]*>Go Back</label>`), buttonId);
+    }
+});
