@@ -42,6 +42,7 @@ eventHandlerStartNewWorkout = (what) => {
 }
 
 eventHandlerContinueSameWorkout = (what) => {
+    localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
     const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
     hideIsThisNewWorkoutModalDialog();
     showAddDelMoreCancelModalDialog(exerciseName);
