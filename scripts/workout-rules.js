@@ -49,12 +49,12 @@ adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
         return;
     }
 
-    //if latest set seconds is under time between sets,
-    //we can assume current workout
-    //and just let the next set be added
-    //thus - we dont do anything
-    const isLastSetUnderMaxTimeBetweenSets = ((timeNowInSeconds() - lastSetSeconds) < T_MAX_TIME_BETWEEN_SETS);
-    if (isLastSetUnderMaxTimeBetweenSets) {
+    //if the latest set happened since the workout started, it belongs to this workout
+    //and the next set just continues the count. comparing against the workout start means
+    //the user's Same or New Workout answer decides this, however long the gap was.
+    const workoutStartedAtSeconds = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds'));
+    const isLastSetInCurrentWorkout = (lastSetSeconds >= workoutStartedAtSeconds);
+    if (isLastSetInCurrentWorkout) {
         return;
     }
 
