@@ -8,7 +8,7 @@
 <script src="scripts/workout-rules.js"></script>
 <script src="scripts/exercise-list-display.js"></script>
 <script src="scripts/exercise-dialogs.js"></script>
-<script src="scripts/header-times-display.js"></script>
+<script src="scripts/workout-time-display.js"></script>
 <script src="scripts/button-press-handlers.js"></script>
 <script src="scripts/app-start.js"></script>
 
@@ -20,8 +20,9 @@
     <strong>
         <div id="mainDiv">
             <div class="timesDiv>">
-                <label class="dispTime" id="currentTime"></label>
-                <label class="dispTime">&nbsp;Workout:</label>
+                <label class="dispTime" id="settingsBtn" onmousedown="eventHandlerHighlightSettingsGearBtn(this)"
+                        onmouseup="eventHandlerOpenSettings(this)">&nbsp;&#9881;&nbsp;</label>
+                <label class="dispTime">Worked:</label>
                 <label class="dispTime" id="currentWorkoutTime">00s</label>
             </div>
 
@@ -42,10 +43,15 @@
                         onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Del Set</label><br /> </p>
                 <p> <label class="exerciseModalBtn" id="cancelBtn" onmousedown="eventHandlerCancelSet(this)"
                         onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Cancel</label><br /> </p>
-                <p> <label class="exerciseModalBtn" id="moreBtn" onmousedown="eventHandlerMore(this)"
-                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">More...</label><br /> </p>
+            </div>
+
+            <div class="exerciseActionsModal" id="settingsModal" style="display: none;">
+                <p class="exerciseModalText">Settings</p>
+                <p> <label class="exerciseModalBtn" id="closeSettingsBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerReturnToListFromSettings(this)">Close</label><br /> </p>
                 <p> <label class="exerciseModalBtn" id="resetBtn" onmousedown="eventHandlerResetLocalStorage(this)"
-                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Reset Everything</label><br /> </p>
+                        onmouseup="eventHandlerReturnToListFromSettings(this)">Reset Everything</label><br /> </p>
             </div>
 
             <div class="exerciseActionsModal" id="isItNewWorkoutModal" style="display: none;">

@@ -49,8 +49,8 @@ test('every add/del button returns to the list on release', () => {
     }
 });
 
-test('every function the markup calls exists, apart from the known More button gap', () => {
+test('every function the markup calls exists', () => {
     const app = loadApp();
     const missing = functionsCalledByMarkup().filter((name) => typeof app.context[name] !== 'function');
-    assert.deepEqual(missing, ['eventHandlerMore']);
+    assert.deepEqual(missing, []);
 });

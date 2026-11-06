@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 const PROJECT_FOLDER = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONE_HOUR = 3600;
 const QUESTION_DIALOG_BUTTONS = ['yesNewWorkoutBtn', 'noNewWorkoutBtn', 'cancelDecidingNewWorkoutBtn'];
+const SETTINGS_DIALOG_BUTTONS = ['closeSettingsBtn', 'resetBtn'];
 
 export const pageMarkup = readFileSync(join(PROJECT_FOLDER, 'exercise.tracker.html'), 'utf8');
 
@@ -47,6 +48,12 @@ function runPageScripts(context) {
     }
 }
 
+function dialogHoldingButton(buttonId) {
+    if (QUESTION_DIALOG_BUTTONS.includes(buttonId)) return 'isItNewWorkoutModal';
+    if (SETTINGS_DIALOG_BUTTONS.includes(buttonId)) return 'settingsModal';
+    return 'exerciseActionsModal';
+}
+
 function attributeFunctionName(buttonId, eventName) {
     const fromButton = pageMarkup.slice(pageMarkup.indexOf(`id="${buttonId}"`));
     return new RegExp(`${eventName}="(\\w+)\\(this\\)"`).exec(fromButton)[1];
@@ -71,9 +78,8 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
 
     const element = document.getElementById;
     const fireButtonEvent = (buttonId, eventName) => {
-        const modalId = QUESTION_DIALOG_BUTTONS.includes(buttonId) ? 'isItNewWorkoutModal' : 'exerciseActionsModal';
         const button = element(buttonId);
-        button.parentElement = { parentElement: element(modalId) };
+        button.parentElement = { parentElement: element(dialogHoldingButton(buttonId)) };
         context[attributeFunctionName(buttonId, eventName)](button);
     };
 
@@ -83,10 +89,11 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
         now: () => now,
         waitSeconds: (seconds) => { now += seconds; },
 
-        /** Which screen is showing: 'list', 'add/del' or 'question'. */
+        /** Which screen is showing: 'list', 'add/del', 'question' or 'settings'. */
         visibleScreen: () => {
             if (element('exerciseActionsModal').style.display === 'block') return 'add/del';
             if (element('isItNewWorkoutModal').style.display === 'block') return 'question';
+            if (element('settingsModal').style.display === 'block') return 'settings';
             return element('exerciseListDiv').style.display === 'none' ? 'nothing' : 'list';
         },
 

@@ -136,6 +136,36 @@ eventHandlerGoBackFromIsItNewWorkoutModalBtn = (what) => {
     exerciseListDiv.style.display = 'block';
 }
 
+//the gear sits in the header, so it is always reachable, even with a dialog open.
+//like the workout choices it only highlights on press, and acts on release.
+eventHandlerHighlightSettingsGearBtn = (what) => {
+    what.style.color = 'white';
+    what.style.backgroundColor = 'dimgrey';
+}
+
+eventHandlerOpenSettings = (what) => {
+    what.style.color = '';
+    what.style.backgroundColor = '';
+
+    document.getElementById('exerciseListDiv').style.display = 'none';
+    hideAddDelMoreCancelModalDialog();
+    hideIsThisNewWorkoutModalDialog();
+    showSettingsModalDialog();
+}
+
+eventHandlerHighlightSettingsDialogBtn = (what) => {
+    what.style.color = 'black';
+    what.style.backgroundColor = 'white';
+}
+
+eventHandlerReturnToListFromSettings = (what) => {
+    what.style.color = 'white';
+    what.style.backgroundColor = 'black';
+
+    hideSettingsModalDialog();
+    document.getElementById('exerciseListDiv').style.display = 'block';
+}
+
 //execiseDiv should act as a button and change background color
 //to indicate press and release
 eventHandlerExerciseDivPressed = (what) => {

@@ -24,7 +24,7 @@ scripts/workout-rules.js ......... Decides same workout, new workout, or ask, an
 scripts/exercise-list-display.js . Sorts and draws the main exercise list.
 scripts/exercise-dialogs.js ...... Shows and hides the two dialogs.
 scripts/button-press-handlers.js . What each button and row does on press and release.
-scripts/header-times-display.js .. Writes the clock and workout time at the top.
+scripts/workout-time-display.js .. Writes the workout time at the top.
 scripts/app-start.js ............. Starts the app on load and sets up the refresh timers.
 index2.html ............. Reference only. A browser "Save As" snapshot of the live page.
                           NEVER edited. Its visible dialog state is a snapshot artifact.
@@ -89,6 +89,13 @@ DECISIONS
   load from a double-clicked file. Moving to modules would be its own later step.
 
 
+- Deleting the only set of a workout restores the exercise as it stood before that
+  workout. One level of undo is enough (the owner's decision). Deleting further back
+  reaches zero.
+- Buttons that open another dialog act on release, never on press. A dialog that opens on
+  press sits under the pointer and catches the release.
+
+
 LAYERS
 -------------------------------------------------------------------------------------
 A file may only depend on the layers below it (craft rule 3.1). Plain script tags have no
@@ -97,7 +104,7 @@ the highest layer and loads last.
 
 5. Start ......... app-start
 4. Input ......... button-press-handlers
-3. Screen ........ exercise-list-display, exercise-dialogs, header-times-display
+3. Screen ........ exercise-list-display, exercise-dialogs, workout-time-display
 2. Decisions ..... workout-rules, exercise-row-colours, elapsed-time-text
 1. Foundations ... workout-time-limits, exercise-names, clock
 

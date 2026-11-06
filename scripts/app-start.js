@@ -5,9 +5,6 @@
 
 window.onload = function () {
 
-    //current time only updates automatically
-    setInterval(displayCurrentTime, 1000);
-
     initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
 
     //workout time will be manually updates right at load, then auto thereafter
