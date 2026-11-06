@@ -1,0 +1,60 @@
+EXERCISE TRACKER — ARCHITECTURE (the truth doc for this project)
+=====================================================================================
+A single-page gym tracker. It logs sets per exercise and shows, by colour and elapsed
+time, what was trained recently and what is overdue. All data lives in the browser's
+localStorage. There is no server.
+
+Craft standard: /media/sf_claude.code/ENGINEERING.craft-bar.txt
+Shared direction: /media/sf_claude.code/WORLD.shared-direction.txt
+
+
+FILES
+-------------------------------------------------------------------------------------
+exercise.tracker.html ... The app. All new work happens here and in files it loads.
+exercise.tracker.css .... All visual styling. Row colours are the exception: they carry
+                          meaning, so the scripts set them inline.
+scripts/workout-time-limits.js ... The time spans workout decisions are built on.
+scripts/exercise-names.js ........ The fixed exercise list. Replaced by user-managed
+                                   exercises later.
+scripts/clock.js ................. The only place the app reads the system clock.
+scripts/elapsed-time-text.js ..... Turns seconds into on-screen text such as 2.5h.
+scripts/exercise-row-colours.js .. Picks a row's colour from set count and age.
+index2.html ............. Reference only. A browser "Save As" snapshot of the live page.
+                          NEVER edited. Its visible dialog state is a snapshot artifact.
+index.html .............. Disregarded. Not part of this project.
+
+
+HOW WE WORK
+-------------------------------------------------------------------------------------
+- Very tiny steps. The owner runs every change live before the next one starts.
+- This session runs in a VM. The owner tests on the VM's host, through the shared folder.
+- No git. Craft rule 7.8's "commit between steps" does not apply here. Steps stay small
+  enough to undo by hand instead.
+- Posture: AGGRESSIVE on structure (standing order 1). The owner's real data is on their
+  phone and nothing here reaches it until the owner uploads.
+
+
+WHERE THE REAL DATA IS
+-------------------------------------------------------------------------------------
+The live app is used only on the owner's phone. Browsers separate stored data by exact
+address, including http versus https.
+
+- A page opened from the shared folder has its own empty data. Testing there is safe.
+- The revised app will be hosted on render.com, a different address from index2.html's
+  site. The two will NOT share data, and that separation is the owner's intent. The new
+  app starts empty there, and the owner moves over manually.
+- So the storage format is free to change. Nothing here has to stay compatible with
+  index2.html's stored data.
+
+
+DECISIONS
+-------------------------------------------------------------------------------------
+- Plain <script src> tags, not JavaScript modules. The existing code relies on implicit
+  globals and inline onmousedown handlers, which modules would break, and modules do not
+  load from a double-clicked file. Moving to modules would be its own later step.
+
+
+LAYERS
+-------------------------------------------------------------------------------------
+Not yet split. Everything is in exercise.tracker.html. Layers get named here as each
+group of code moves out. A file may only depend on the layers below it (craft rule 3.1).

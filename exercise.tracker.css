@@ -1,0 +1,77 @@
+/* exercise.tracker.css
+ * All visual styling for the tracker: the main screen and its dialogs.
+ * Why it is its own file: how the app looks changes for different reasons than how it
+ * behaves (craft rule 3.4). Row colours are the exception. They carry meaning (set count
+ * and age), so they are decided in the scripts and set inline on each row.
+ */
+
+:root {
+    --background-color: rgb(150, 148, 148);
+}
+
+.globalExerciseListDiv {
+    width: 100%;
+    border: 2px solid black;
+    /*background-color: var(--background-color)*/
+}
+
+.timesDiv {
+    color: black;
+    font-size: 100px;
+    height: 120px;
+    background-color: var(--background-color)
+}
+
+.dispTime {
+    color: black;
+    font-size: 100px;
+    height: 120px;
+    background-color: var(--background-color)
+}
+
+/*
+.exerciseDiv {
+    color: black;
+    font-size: 100px;
+    font-weight: bold;
+    width: 100%;
+    border: 2px solid blue;
+    background-color: var(--background-color)
+}
+*/
+
+.exerciseDiv {
+    color: black;
+    font-size: 100px;
+    height: 120px;
+    border: 2px solid black;
+    background-color: var(--background-color)
+}
+
+.exerciseLabel {
+    display: inline-block;
+    float: left;
+}
+
+.elapsedTimeLabel {
+    display: inline-block;
+    float: right;
+}
+
+
+.exerciseActionsModal {
+    text-align: center;
+    color: white;
+    border: 2px solid white;
+}
+
+.exerciseModalBtn {
+    color: white;
+    font-size: 100px;
+    border: 2px solid white;
+}
+
+.exerciseModalText {
+    color: white;
+    font-size: 100px;
+}

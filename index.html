@@ -1,0 +1,651 @@
+
+<!-- saved from url=(0052)http://the-transporter-1959.elementfx.com/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><script>
+    const exerciseList = [
+        'Crunches',
+        'Leg Press',
+        'Trunk Tws',
+        'Side Bends',
+        'Bench',
+        'Lwr Back',
+        'Leg Curls',
+        'Latrl Rais',
+        'Lat Pulldn',
+        'Low Row',
+        'Anter Rais',
+        'Mid Back',
+        'Shrugs',
+        'Bicp Curls',
+        'Triceps',
+        'Calves',
+        'Adducts',
+        'Abducts',
+
+    ];
+
+</script>
+
+
+    <style>
+        .timesDiv {
+            color: black;
+            font-size: 100px;
+            height: 120px;
+            background-color: rgb(150, 148, 148);
+        }
+
+        .dispTime {
+            color: black;
+            font-size: 100px;
+            height: 120px;
+            background-color: rgb(150, 148, 148);
+        }
+
+        .exerciseDiv {
+            color: black;
+            font-size: 100px;
+            height: 120px;
+            border: 2px solid black;
+            background-color: rgb(150, 148, 148);
+        }
+
+        .exerciseLabel {
+            display: inline-block;
+            float: left;
+        }
+
+        .elapsedTimeLabel {
+            display: inline-block;
+            float: right;
+        }
+
+
+        .exerciseActionsModal {
+            text-align: center;
+            border: 2px solid black;
+        }
+
+        .exerciseModalBtn {
+            color: white;
+            font-size: 100px;
+            border: 2px solid white;
+        }
+
+        .exerciseModalText {
+            color: white;
+            font-size: 100px;
+        }
+    </style>
+</head>
+
+<body style="background-color: black;">
+    <strong>
+        <div class="timesDiv&gt;">
+            <label class="dispTime" id="currentTime">18:57</label>
+            <label class="dispTime">&nbsp;Workout:</label>
+            <label class="dispTime" id="workoutTime">00s</label>
+        </div>
+
+        <div id="mainScreen" data-workout-started-at-seconds="0" data-workout-latest-set-at-seconds="0" style="display: block;"><div class="exerciseDiv" name="Crunches" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Crunches" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey; color: black;" data-curr-exercise-prev-secs="0">
+            <label class="exerciseLabel">0 Crunches</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Leg Press" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Leg Press" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Leg Press</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Trunk Tws" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Trunk Tws" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Trunk Tws</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Side Bends" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Side Bends" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Side Bends</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Bench" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Bench" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Bench</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Lwr Back" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Lwr Back" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Lwr Back</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Leg Curls" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Leg Curls" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Leg Curls</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Latrl Rais" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Latrl Rais" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Latrl Rais</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Lat Pulldn" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Lat Pulldn" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Lat Pulldn</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Low Row" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Low Row" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Low Row</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Anter Rais" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Anter Rais" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Anter Rais</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Mid Back" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Mid Back" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Mid Back</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Shrugs" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Shrugs" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Shrugs</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Bicp Curls" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Bicp Curls" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Bicp Curls</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Triceps" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Triceps" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Triceps</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Calves" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Calves" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Calves</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Adducts" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Adducts" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Adducts</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Abducts" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Abducts" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Abducts</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div></div>
+
+        <div style="display:none" class="mainScreen" id="backupMainScreen"><div class="exerciseDiv" name="Crunches" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Crunches" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey; color: black;" data-curr-exercise-prev-secs="0">
+            <label class="exerciseLabel">0 Crunches</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Leg Press" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Leg Press" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Leg Press</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Trunk Tws" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Trunk Tws" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Trunk Tws</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Side Bends" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Side Bends" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Side Bends</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Bench" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Bench" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Bench</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Lwr Back" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Lwr Back" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Lwr Back</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Leg Curls" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Leg Curls" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Leg Curls</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Latrl Rais" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Latrl Rais" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Latrl Rais</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Lat Pulldn" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Lat Pulldn" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Lat Pulldn</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Low Row" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Low Row" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Low Row</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Anter Rais" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Anter Rais" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Anter Rais</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Mid Back" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Mid Back" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Mid Back</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Shrugs" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Shrugs" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Shrugs</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Bicp Curls" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Bicp Curls" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Bicp Curls</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Triceps" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Triceps" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Triceps</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Calves" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Calves" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Calves</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Adducts" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Adducts" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Adducts</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div><div class="exerciseDiv" name="Abducts" onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()" data-exercise-count="0" data-exercise-name="Abducts" data-exercise-seconds="0" data-exercise-prev-secs="0" data-exercise-prev-count="0" style="background-color: lightgrey;">
+            <label class="exerciseLabel">0 Abducts</label>
+            <label class="elapsedTimeLabel id=" elapsedtimelabel"="">Never</label>
+        </div></div>
+
+
+        <div class="exerciseActionsModal" id="exerciseActionsModal" style="display: none;">
+            <p class="exerciseModalText" id="exerciseModalText">Crunches<br>Prev Sets:0<br></p>
+
+            <p>
+                <label class="exerciseModalBtn" id="addSetBtn" onmousedown="addSet(this)" onmouseup="finishModalBtn(this)">Add Set</label><br>
+            </p>
+            <p>
+                <label class="exerciseModalBtn" id="delSetBtn" onmousedown="delSet(this)" onmouseup="finishModalBtn(this)">Del Set</label><br>
+            </p>
+            <p>
+                <label class="exerciseModalBtn" id="cancelBtn" onmousedown="canSet(this)" onmouseup="finishModalBtn(this)" style="color: white; background-color: black;">Cancel</label><br>
+            </p>
+
+        </div>
+    </strong>
+
+
+<script>
+
+    const FULL_DAY = 86400;
+    const PART_DAY = 21600;
+    const MAX_TIME_BETWEEN_SETS = 3600; // 1 hour between sets should be plenty. this helps keep a more accurate workout time
+
+    const mainScreen = document.getElementById('mainScreen');
+
+    // everything has to be saved in localStorage because the user(or browser itself) might refresh
+    // the page.
+    // we will consider a workout length to be from the time at (secs) when 1st set entered
+    // till the time at (secs) when the latest set entered
+    var workoutStartedAtSeconds = localStorage.getItem('mainScreen workoutStartedAtSeconds');
+    var workoutLatestSetAtSeconds = localStorage.getItem('mainScreen workoutLatestSetAtSeconds');
+    if (workoutStartedAtSeconds === null) { 
+        workoutStartedAtSeconds = 0; 
+        workoutLatestSetAtSeconds = 0;
+    } else {
+        workoutStartedAtSeconds = parseFloat(workoutStartedAtSeconds).toFixed(0);
+        workoutLatestSetAtSeconds = parseFloat(workoutLatestSetAtSeconds).toFixed(0);
+    }
+
+    theTimeNowInSeconds = () => {
+        return Date.now() / 1000;
+    }
+
+    getCurrentTime = () => {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+
+        document.getElementById('currentTime').innerHTML = `${hours}:` + ((minutes < 10) ? '0' : '') + `${minutes}`;
+
+        updateWorkoutTime();
+       
+    }
+
+    setInterval(getCurrentTime, 1000);
+
+    window.onload = function () {
+        preparePageHTML();
+    }
+
+    const backupMainScreen = document.getElementById('backupMainScreen');
+    const exerciseActionsModal = document.getElementById('exerciseActionsModal');
+    const exerciseModalText = document.getElementById('exerciseModalText');
+    var currExerciseDiv = null;
+    var currExerciseLabel = null;
+    var currElapsedTimeLabel = null;
+    var currExerciseCount = 0;
+    var currExerciseSeconds = 0;
+    var currExercisePrevSecs = 0;
+    var currExercisePrevCount = 0;
+    var currExerciseName = 'An Exercise';
+    //var timeNowSecs = theTimeNowInSeconds();
+
+
+    updateWorkoutTime = () => {
+
+        const wkStartAtSecs = parseFloat(localStorage.getItem('mainScreen workoutStartedAtSeconds')).toFixed(0);
+        const wkLatestSecs  = parseFloat(localStorage.getItem('mainScreen workoutLatestSetAtSeconds')).toFixed(0);
+        if ((wkLatestSecs - wkStartAtSecs) < MAX_TIME_BETWEEN_SETS) {
+            const timeNowSecs = theTimeNowInSeconds();
+            var workoutSecs = timeNowSecs - wkStartAtSecs;
+            if (workoutSecs > 3600) {
+                innerHTML = parseFloat(workoutSecs / 3600).toFixed(1) + 'h';
+            } else if (workoutSecs > 60) {
+                innerHTML = parseFloat(workoutSecs / 60).toFixed(1) + 'm';
+            } else {
+                innerHTML = parseFloat(workoutSecs).toFixed(0) + 's';
+            }
+            document.getElementById('workoutTime').innerHTML = innerHTML;
+        }
+    }
+
+
+    addSet = (what) => {
+
+        //if the amount of time between the 1st set and the latest set is too much,
+        //we must have started a new workout
+
+        //the amount of time of a workout could be old data from a previous workout
+        //if so, clear and start workout over NOW
+        const exerSecs = parseFloat(localStorage.getItem(currExerciseName + ' secs')).toFixed(0);
+        const wkLatestSecs  = parseFloat(localStorage.getItem('mainScreen workoutLatestSetAtSeconds')).toFixed(0);
+        if ((wkLatestSecs - exerSecs) > MAX_TIME_BETWEEN_SETS) {
+            workoutStartedAtSeconds = theTimeNowInSeconds();
+            currExerciseCount = 0;
+        }
+
+        //no matter what we keep track of the time of the latest set
+        workoutLatestSetAtSeconds = theTimeNowInSeconds();
+
+        currExerciseCount = parseInt(currExerciseCount) + 1;
+        //shift what was cur set's secs over to prev set's secs
+        currExercisePrevSecs = exerSecs;
+        //now we have a new secs for the new to be added set
+        currExerciseSeconds = theTimeNowInSeconds();
+
+        saveToLocalStorage();
+
+
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+
+    }
+
+    delSet = (what) => {
+        const timeNowSecs = theTimeNowInSeconds();
+        currExerciseCount > 0 ? currExerciseCount = currExerciseCount - 1 : currExerciseCount;
+
+        if (currExerciseCount > 0) {
+            if (currExercisePrevSecs !== null && currExercisePrevSecs > 0) {
+                currExerciseSeconds = currExercisePrevSecs;
+            }
+        }
+
+        //we are back at 0 sets in current workout. 
+        //it is difficult/laborious to properly assign values and sorting order once we start
+        //deleting a set.. so if set is reduced to zero, we're just going to say this
+        //exercise was NEVER done
+        else {
+            currExercisePrevSecs = 0;
+            currExerciseSeconds = 0;
+            currExercisePrevCount = 0;
+        }
+
+        saveToLocalStorage();
+
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+    }
+
+    canSet = (what) => {
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+    }
+
+    finishModalBtn = (what) => {
+        what.style.color = 'white';
+        what.style.backgroundColor = 'black';
+        backToMainScreen();
+    }
+
+    backToMainScreen = () => {
+        currExerciseDiv.dataset.exerciseCount = currExerciseCount;
+        currExerciseLabel.innerHTML = currExerciseCount + ' ' + currExerciseName;
+        currExerciseDiv.dataset.exerciseSeconds = currExerciseSeconds;
+        currExerciseDiv.dataset.currExercisePrevSecs = currExercisePrevSecs;
+
+        setCurrentExerciseBackgroundColor(currExerciseDiv);
+
+        updateAllExercisesVisibleHTMLElapsedTime();
+
+        sortAllExercisesByElapsedTime();
+
+        mainScreen.style.display = 'block';
+        exerciseActionsModal.style.display = 'none';
+    }
+
+    mainScreenExercisePressed = (what) => {
+
+        currExerciseDiv = what;
+
+        setCurrentExerciseGlobalVars(currExerciseDiv);
+
+        const prevCount = currExerciseDiv.dataset.exercisePrevCount;
+        exerciseModalText.innerHTML = currExerciseName + '<br>Prev Sets:' + prevCount + '</br>';
+
+        currExerciseDiv.style.color = 'white';
+        currExerciseDiv.style.backgroundColor = 'dimgrey';
+    }
+
+    mainScreenExerciseReleased = () => {
+        mainScreen.style.display = 'none';
+        currExerciseDiv.style.color = 'black';
+        exerciseActionsModal.style.display = 'block';
+    }
+
+    setCurrentExerciseGlobalVars = (exerciseDiv) => {
+        currExerciseLabel = exerciseDiv.children[0];
+        currElapsedTimeLabel = exerciseDiv.children[1];
+        currExerciseCount = parseInt(exerciseDiv.dataset.exerciseCount);
+        currExercisePrevCount = parseInt(exerciseDiv.dataset.exercisePrevCount);
+        currExerciseSeconds = parseInt(exerciseDiv.dataset.exerciseSeconds);
+        currExercisePrevSecs = parseInt(exerciseDiv.dataset.exercisePrevSecs);
+        currExerciseName = exerciseDiv.dataset.exerciseName;
+    }
+
+    preparePageHTML = () => {
+
+        exerciseList.forEach((exerciseName) => {
+            //debugger;
+            createExercise(exerciseName);
+            currExerciseDiv = mainScreen.querySelector('[name="' + exerciseName + '"]');
+            setCurrentExerciseGlobalVars(currExerciseDiv);
+        });
+
+        updateAllExercisesVisibleHTMLElapsedTime();
+
+        sortAllExercisesByElapsedTime();
+
+        setInterval(updateAllExercisesVisibleHTMLElapsedTime, 2500);
+    }
+
+    currentExerciseIsOlderThanCurrentWorkout = () => {
+        const timeNowSecs = theTimeNowInSeconds();
+        return ((timeNowSecs - currExerciseSeconds) > PART_DAY) ? true : false;
+    }
+
+    createExercise = (exerciseName) => {
+        //debugger;
+        let count = localStorage.getItem(exerciseName + ' count');
+        let secs = localStorage.getItem(exerciseName + ' secs');
+        let prevsecs = localStorage.getItem(exerciseName + ' prevsecs');
+        let prevcount = localStorage.getItem(exerciseName + ' prevcount');
+
+        if (count !== null) { count = parseInt(count); } else { count = 0; }
+        if (prevcount !== null) { prevcount = parseInt(prevcount); } else { prevcount = 0; }
+        if (secs !== null) { secs = parseFloat(secs).toFixed(0); } else { secs = 0; }
+        if (prevsecs !== null) { prevsecs = parseFloat(prevsecs).toFixed(0); } else { prevsecs = 0; }
+
+        if (count == 0 || secs == 0) {
+            count = 0; secs = 0; prevsecs = 0; prevcount = 0;
+        }
+        // else we have valid values; the exercise was prev done and recorded
+        else {
+
+            //if secs is greater than a few hours of prevsecs, then that means
+            //we have been done working out, and it's ok to update all prev as curr
+            if ((secs - prevsecs) > PART_DAY) {
+                prevsecs = secs;
+                prevcount = count;
+                updatePrevToLocalStorage(exerciseName, prevsecs, prevcount);
+            }
+        }
+/*
+        console.log("exer:", exerciseName,
+            "secs:", secs,
+            "prevsecs:", prevsecs,
+            "diff:", (secs - prevsecs),
+            "PART:",PART_DAY,
+            "count:",count,
+            "prevcount:",prevcount
+        );
+*/
+        const exerciseHTML = `
+        <div class="exerciseDiv" name="` + exerciseName + `"
+                onmousedown="mainScreenExercisePressed(this)" onmouseup="mainScreenExerciseReleased()"
+                data-exercise-count="` + count + `"
+                data-exercise-name="`+ exerciseName + `"
+                data-exercise-seconds="` + secs + `"
+                data-exercise-prev-secs="` + prevsecs + `"
+                data-exercise-prev-count="` + prevcount + `"
+        >
+            <label class="exerciseLabel" >` + count + ` ` + exerciseName + `</label>
+            <label class="elapsedTimeLabel id="elapsedTimeLabel">` + secs + `</label>
+        </div>
+        `;
+
+        mainScreen.innerHTML = mainScreen.innerHTML + exerciseHTML;
+    }
+
+    setCurrentExerciseBackgroundColor = (exerDiv) => {
+
+        const exerCount = parseInt(exerDiv.dataset.exerciseCount);
+
+        var backgroundColor;
+        switch (exerCount) {
+            case 0:
+                backgroundColor = 'dimgrey';
+                break;
+            case 1:
+                backgroundColor = '#ff0000 ';
+                break;
+            case 2:
+                backgroundColor = '#e68a00';
+                break;
+            case 3:
+                backgroundColor = '#ffb31a';
+                break;
+            case 4:
+                backgroundColor = 'gold';
+                break;
+            case 5:
+                backgroundColor = 'yellow';
+                break;
+            case 6:
+                backgroundColor = '#ccff33';
+                break;
+            case 7:
+                backgroundColor = '#99ff33';
+                break;
+            case 8:
+                backgroundColor = '#66ff33';
+                break;
+            case 9:
+                backgroundColor = '#00ff99';
+                break;
+            case 10:
+                backgroundColor = '#66ffff';
+                break;
+            case 11:
+                backgroundColor = '#ccffff';
+                break;
+            case 12:
+            case 13:
+                backgroundColor = '#e6ffff';
+                break;
+            default:
+                backgroundColor = 'white';
+                break;
+        }
+
+        exerDiv.style.backgroundColor = backgroundColor;
+
+    }
+
+    updateAllExercisesVisibleHTMLElapsedTime = () => {
+        const timeNowSecs = theTimeNowInSeconds();
+        exerciseList.forEach((exerciseName) => {
+            const exerDiv = mainScreen.querySelector('[name="' + exerciseName + '"]');
+            const exerSecs = parseFloat(exerDiv.dataset.exerciseSeconds).toFixed(0);
+            const exerCount = parseInt(exerDiv.dataset.exerciseCount);
+            //only update exercise elapsed time if exercise has ever been done at all
+            let innerHTML = 'HUH';
+
+
+            setCurrentExerciseBackgroundColor(exerDiv);
+
+            if (exerSecs > 0 && exerCount > 0) {
+                let elapsedTime = timeNowSecs - exerSecs;
+
+                // if an exercise elapsed time exceeds a day, we now change the
+                // background color to highlight which set of exercises are:
+                // 1 day old
+                // 2 days old
+                // etc
+                if ((elapsedTime >= (FULL_DAY * 10))) { // 10+ days old
+                    exerDiv.style.backgroundColor = 'lightgrey';
+                } else if ((elapsedTime >= (FULL_DAY * 9))) { // 9+ days old
+                    exerDiv.style.backgroundColor = '#006622';
+                } else if ((elapsedTime >= (FULL_DAY * 8))) { // 8+ days old
+                    exerDiv.style.backgroundColor = '#558000';
+                } else if ((elapsedTime >= (FULL_DAY * 7))) { // 7+ days old
+                    exerDiv.style.backgroundColor = '#8a8a5c';
+                } else if ((elapsedTime >= (FULL_DAY * 6))) { // 6+ days old
+                    exerDiv.style.backgroundColor = '#b37700';
+                } else if ((elapsedTime >= (FULL_DAY * 5))) { // 5+ days old
+                    exerDiv.style.backgroundColor = '#b30059';
+                } else if ((elapsedTime >= (FULL_DAY * 4))) { // 4+ days old
+                    exerDiv.style.backgroundColor = '#990099';
+                } else if ((elapsedTime >= (FULL_DAY * 3))) { // 3+ days old
+                    exerDiv.style.backgroundColor = '#9900cc';
+                } else if ((elapsedTime >= (FULL_DAY * 2))) { // 2+ days old
+                    exerDiv.style.backgroundColor = '#7300e6';
+                } else if ((elapsedTime >= FULL_DAY)) {// 1+ day old (24hr)
+                    exerDiv.style.backgroundColor = '#6666ff';
+                } else if ((elapsedTime >= PART_DAY)) {// 1/2+ day old (12hr)
+                    exerDiv.style.backgroundColor = '#11aaff';
+                }
+
+                // this function will NOT touch the background colors of any exercise
+                // that has been updated within the current day.
+                // this is so the color indicates what was done last in the current
+                // workout.
+                if ((elapsedTime >= PART_DAY)) {// 1+ day old
+                    innerHTML = parseFloat(elapsedTime / FULL_DAY).toFixed(1) + 'Day';
+                } else if (elapsedTime > 3600) {
+                    innerHTML = parseFloat(elapsedTime / 3600).toFixed(1) + 'Hr';
+                } else if (elapsedTime >= 60) {
+                    innerHTML = parseFloat(elapsedTime / 60).toFixed(1) + ' Min';
+                } else if (elapsedTime > 1) {
+                    innerHTML = parseFloat(elapsedTime).toFixed(0) + ' Sec';
+                } else {
+                    innerHTML = '0 Sec';
+                }
+            } else {
+                exerDiv.style.backgroundColor = 'lightgrey';
+                innerHTML = 'Never';
+            }
+
+            exerDiv.children[1].innerHTML = innerHTML;
+        });
+    }
+
+
+    sortAllExercisesByElapsedTime = () => {
+
+        exerciseList.sort((a, b) => {
+            const exerDivA = mainScreen.querySelector('[name="' + a + '"]');
+            const exerDivB = mainScreen.querySelector('[name="' + b + '"]');
+            const secsA = parseFloat(exerDivA.dataset.exerciseSeconds).toFixed(0);
+            const secsB = parseFloat(exerDivB.dataset.exerciseSeconds).toFixed(0);
+
+            return secsB - secsA;
+        });
+
+
+        // create the new (to be rendered) and sorted exercise list (the divs)
+        // we use the backup element to create the sorted (to be rendered)
+
+        // first we clear the backup
+        backupMainScreen.innerHTML = '';
+
+        // then we populate the backup using the sorted exercise list
+        // we use the sorted exercise names to find the visible from the orig main screen div
+        exerciseList.forEach((exerciseName) => {
+            const exerDiv = mainScreen.querySelector('[name="' + exerciseName + '"]');
+            backupMainScreen.appendChild(exerDiv);
+        });
+
+        //once we have that, now we can copy over from backup to main screen
+        mainScreen.innerHTML = backupMainScreen.innerHTML;
+    }
+
+    updatePrevToLocalStorage = (exerName, exerPrevSecs, exerPrevCount) => {
+        localStorage.setItem(exerName + ' prevsecs', exerPrevSecs);
+        localStorage.setItem(exerName + ' prevcount', exerPrevCount);
+    }
+
+    saveToLocalStorage = () => {
+        localStorage.setItem(currExerciseName + ' count', currExerciseCount);
+        localStorage.setItem(currExerciseName + ' secs', currExerciseSeconds);
+        updatePrevToLocalStorage(currExerciseName);
+        localStorage.setItem('mainScreen workoutStartedAtSeconds', workoutStartedAtSeconds);
+        localStorage.setItem('mainScreen workoutLatestSetAtSeconds', workoutLatestSetAtSeconds);
+    }
+
+</script>
+
+</body></html>

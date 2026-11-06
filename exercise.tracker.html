@@ -1,0 +1,562 @@
+<html>
+
+<script>
+    const globalDefaultBackgroundColor = 'rgb(150, 148, 148)';
+</script>
+
+<script src="scripts/workout-time-limits.js"></script>
+<script src="scripts/exercise-names.js"></script>
+<script src="scripts/clock.js"></script>
+<script src="scripts/elapsed-time-text.js"></script>
+<script src="scripts/exercise-row-colours.js"></script>
+
+<head>
+    <link rel="stylesheet" href="exercise.tracker.css">
+</head>
+
+<body style="background-color: black;">
+    <strong>
+        <div id="mainDiv">
+            <div class="timesDiv>">
+                <label class="dispTime" id="currentTime"></label>
+                <label class="dispTime">&nbsp;Workout:</label>
+                <label class="dispTime" id="currentWorkoutTime">00s</label>
+            </div>
+
+            <div class="exerciseListDiv" id="exerciseListDiv">
+                <!-- this is filled dynamically on page load -->
+                <!-- this hold the list of exercises-->
+            </div>
+<!--
+            <div style="display:none" class="exerciseListDiv" id="backupExerciseList">
+            </div>
+        -->
+
+            <div class="exerciseActionsModal" id="exerciseActionsModal" style="display: none;">
+                <p class="exerciseModalText" id="exerciseModalText"> Some Exercise Name Here </p>
+                <p> <label class="exerciseModalBtn" id="addSetBtn" onmousedown="eventHandlerAddSet(this)"
+                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Add Set</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="delSetBtn" onmousedown="eventHandlerDelSet(this)"
+                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Del Set</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="cancelBtn" onmousedown="eventHandlerCancelSet(this)"
+                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Cancel</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="moreBtn" onmousedown="eventHandlerMore(this)"
+                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">More...</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="resetBtn" onmousedown="eventHandlerResetLocalStorage(this)"
+                        onmouseup="eventHandlerFinishExerciseActionsModalBtn(this)">Reset Everything</label><br /> </p>
+            </div>
+
+            <div class="exerciseActionsModal" id="isItNewWorkoutModal" style="display: none;">
+                <p class="exerciseModalText" id="isItNewWorkoutModalText"> Some Exercise Name Here </p>
+                <p> <label class="exerciseModalBtn" id="yesNewWorkoutBtn"
+                        onmousedown="eventHandlerStartNewWorkout(this)"
+                        onmouseup="eventHandlerFinishIsItNewWorkoutModalBtn(this)">New Workout</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="noNewWorkoutBtn"
+                        onmousedown="eventHandlerContinueSameWorkout(this)"
+                        onmouseup="eventHandlerFinishIsItNewWorkoutModalBtn(this)">Same Workout</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="cancelDecidingNewWorkoutBtn"
+                        onmousedown="eventHandlerCancelDecidingIsItNewWorkout(this)"
+                        onmouseup="eventHandlerGoBackFromIsItNewWorkoutModalBtn(this)">Go Back</label><br /> </p>
+            </div>
+
+
+        </div>
+    </strong>
+</body>
+
+<script>
+    window.onload = function () {
+
+        //current time only updates automatically
+        setInterval(displayCurrentTime, 1000);
+
+        initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
+
+        //workout time will be manually updates right at load, then auto thereafter
+        displayWorkoutTime();
+        setInterval(displayWorkoutTime, 2500);
+
+        //exercises and their sets and times will be manually updated right at load, then auto thereafter
+        createDisplayableExerciseList();
+        setInterval(createDisplayableExerciseList, 3000);
+    }
+
+    eventHandlerCancelDecidingIsItNewWorkout = (what) => {
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+    }
+
+    eventHandlerResetLocalStorage = (what) => {
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+
+        globalExerciseListOfNames.forEach((exerciseName) => {
+            localStorage.removeItem(exerciseName);
+        });
+
+        localStorage.removeItem('currentWorkoutStartedAtSeconds');
+        localStorage.removeItem('currentWorkoutLatestSetAtSeconds');
+        localStorage.removeItem('theLastExerciseSetAdded');
+    }
+
+    eventHandlerStartNewWorkout = (what) => {
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+
+        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+        adjustEverythingToStartNewWorkout(exerciseName);
+        displayWorkoutTime();
+        hideIsThisNewWorkoutModalDialog();
+        showAddDelMoreCancelModalDialog(exerciseName);
+    }
+
+    eventHandlerContinueSameWorkout = (what) => {
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+        hideIsThisNewWorkoutModalDialog();
+        showAddDelMoreCancelModalDialog(exerciseName);
+    }
+
+    eventHandlerAddSet = (what) => {
+        //grab data from dialog(overall parent)
+        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+        localStorage.setItem('theLastExerciseSetAdded', exerciseName);
+
+        adjustExerciseToBePartOfCurrentWorkoutAsNeeded(exerciseName);
+
+        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+        const json = JSON.parse(exerciseJsonFromLocalStorage);
+
+        //inc the current set and grab time of new set
+        const len = json.secList.length;
+        let setidx = parseInt(json.setidx);
+
+        //we are limited to a certain number of sets
+        //after the limit, we do not save the next set
+        if ((setidx + 1) < len) {
+            setidx = setidx + 1;
+
+            json.setidx = setidx;
+            json.secList[setidx] = timeNowInSeconds();
+
+            //save the data
+            localStorage.setItem(exerciseName, JSON.stringify(json));
+
+        }
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+
+        displayWorkoutTime();
+        createDisplayableExerciseList();
+
+    }
+
+    initializeCurrentWorkoutTimesInLocalStorageAsNeeded = () => {
+
+        let wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
+        let wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
+
+        if (wkStartAtSecs === null || wkStartAtSecs === 'NaN') { wkStartAtSecs = 0; }
+        if (wkLatestSecs === null || wkLatestSecs === 'NaN') { wkLatestSecs = 0; }
+
+        if (wkStartAtSecs == 0) {
+            localStorage.setItem('currentWorkoutStartedAtSeconds', 0);
+            localStorage.setItem('currentWorkoutLatestSetAtSeconds', 0);
+        }
+    }
+
+    adjustEverythingToStartNewWorkout = (exerciseName) => {
+        //this means we the last set time, become the workout start time(weve moved up the workout start time)
+        //actually this seems very similar to the FIRS TIME run.
+        localStorage.setItem('currentWorkoutStartedAtSeconds', timeNowInSeconds());
+        localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
+        localStorage.removeItem('theLastExerciseSetAdded');
+
+    }
+
+    //THIS CALLED WHEN SET TO BE ADDED
+    //if user clicks to add another set, to an exercise,
+    //we need to know if the new set is added to the displayed sets for that exercise,(current workout)
+    //or if we need to zero stuff and this is the first set
+    adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
+
+        const timeNowSeconds = timeNowInSeconds();
+
+        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+
+        const json = JSON.parse(exerciseJsonFromLocalStorage);
+
+        const lastSetIdx = parseInt(json.setidx);
+        const lastSetSeconds = parseFloat(json.secList[lastSetIdx]).toFixed(0);
+
+        //i think if setidx is 0 and secList(idx) is 0, then
+        //it is safe to assume we dont have to do anything
+        if ((lastSetIdx == 0) && (lastSetSeconds == 0)) {
+            return;
+        }
+
+        //if latest set seconds is under time between sets,
+        //we can assume current workout
+        //and just let the next set be added
+        //thus - we dont do anything
+        const isLastSetUnderMaxTimeBetweenSets = ((timeNowInSeconds() - lastSetSeconds) < T_MAX_TIME_BETWEEN_SETS);
+        if (isLastSetUnderMaxTimeBetweenSets) {
+            return;
+        }
+
+        // we also have to update the latest set idx as the prev workout set
+        // we also have to clear the array of current set seconds
+        // and finally store all that back to local storage
+        json.secList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        json.prevWkNumSets = json.setidx;
+        json.setidx = 0;
+        localStorage.setItem(exerciseName, JSON.stringify(json));
+    }
+
+    getExerciseLatestSetSeconds = (exerciseName) => {
+        //we also have to look at the specific exercise times
+        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+        if (exerciseJsonFromLocalStorage === null) {
+            return 0;
+        }
+
+        const json = JSON.parse(exerciseJsonFromLocalStorage);
+        const setidx = parseInt(json.setidx);
+
+        return json.secList[setidx];
+    }
+
+    doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded = (exerciseName) => {
+
+        //we have to look at global workout time
+        let wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
+        let wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
+        wkStartAtSecs = parseFloat(wkStartAtSecs).toFixed(0);
+        wkLatestSecs = parseFloat(wkLatestSecs).toFixed(0);
+
+
+        //BRAND NEW 1st TIME WORKOUT
+        //THIS SHOULD ONLY HAPPEN ONCE, IF BROWSER LOCAL STORAGE IS EMPTY OR CLEARED
+        //this could be the very first workout (start time is 0);
+        // so we save the new start time, and it is also the time of the 1st set.
+        if (wkStartAtSecs === null || wkStartAtSecs === NaN || wkStartAtSecs == 0 || (wkStartAtSecs > wkLatestSecs)) {
+            localStorage.setItem('currentWorkoutStartedAtSeconds', timeNowInSeconds());
+            localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
+            localStorage.removeItem('theLastExerciseSetAdded');
+            //that's it we're done for this go round
+            return false;//we knew what to do, no need to ask user
+        }
+
+        // CURRENT WORKOUT
+        //next scenario is there is a current workout in effect.
+        //minimum requirement is that latest time must be greater than or equal to start time.(1 or more sets)
+        //minimum requirement is that latest time must be greater than zero.(superflous??)
+        //how do we know what is a 'current' workout?
+        //subjective: we allow a max diff between current time and latest time.
+        //NOTE: the global workout times can be current/recent, but we could have clicked on an older exercise
+        //so that has to be tested too
+        if (wkLatestSecs > 0) {//met min requirements, so this is NOT a diff scenario.
+
+            const isWorkoutUnderMaxTimeBetweenSets = ((timeNowInSeconds() - wkLatestSecs) < T_MAX_TIME_BETWEEN_SETS);
+
+            //const exerciseLatestSeconds = getExerciseLatestSetSeconds(exerciseName);
+            //const isExerciseLatestSecondsLessThanMaxTimeBetweenSets = ((timeNowInSeconds() - exerciseLatestSeconds) < T_MAX_TIME_BETWEEN_SETS);
+            //const isExerciseHaveZeroSetsZeroTime = (exerciseLatestSeconds == 0);
+
+            // are we still in current or has it passed
+            //if (isWorkoutUnderMaxTimeBetweenSets && (isExerciseLatestSecondsLessThanMaxTimeBetweenSets || isExerciseHaveZeroSetsZeroTime)) {
+            if (isWorkoutUnderMaxTimeBetweenSets) {
+                //still in current, just update the latest time
+                localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
+                //that's it we're done for this go round
+                return false;//we knew what to do, no need to ask user
+            }
+        }
+
+        //PAST CURRENT WORKOUT, START NEW ONE
+        //the next scenario is that we are no longer in current workout, too much time has passed.
+        if (wkLatestSecs > 0) {//met min requirements, so this is NOT a diff scenario.
+            // are we past current workout?
+            if ((timeNowInSeconds() - wkLatestSecs) > T_MAX_WK_TIME) {
+
+                adjustEverythingToStartNewWorkout(exerciseName);
+
+                return false;//we knew what to do, no need to ask user
+            }
+        }
+
+        //WE DONT KNOW, COULD BE CURENT WORKOUT, ASK
+        //is this a new workout starting? or is it still current workout?
+        //because the user has taken a long time between sets
+        return true;
+    }
+
+    eventHandlerDelSet = (what) => {
+        //grab data from dialog(overall parent)
+        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+
+        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+        const json = JSON.parse(exerciseJsonFromLocalStorage);
+        const setidx = parseInt(json.setidx);
+
+        //if not already at first set, dec the current set
+        if (setidx > 0) {
+            json.setidx = setidx - 1;
+            //save the data
+            localStorage.setItem(exerciseName, JSON.stringify(json));
+        }
+
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+
+        displayWorkoutTime();
+        createDisplayableExerciseList();
+
+    }
+
+    eventHandlerCancelSet = (what) => {
+        what.style.color = 'black';
+        what.style.backgroundColor = 'white';
+    }
+
+    eventHandlerFinishExerciseActionsModalBtn = (what) => {
+
+        console.log('eventHandlerFinishExerciseActionsModalBtn');
+
+        what.style.color = 'white';
+        what.style.backgroundColor = 'black';
+
+        const modal = what.parentElement.parentElement;
+        modal.style.display = 'none';
+
+        //createDisplayableExerciseList();
+        const exerciseListDiv = document.getElementById('exerciseListDiv');
+        exerciseListDiv.style.display = 'block';
+    }
+
+
+    eventHandlerFinishIsItNewWorkoutModalBtn = (what) => {
+
+        console.log('eventHandlerFinishIsItNewWorkoutModalBtn');
+
+        what.style.color = 'white';
+        what.style.backgroundColor = 'black';
+
+        const modal = what.parentElement.parentElement;
+        modal.style.display = 'none';
+
+        //const exerciseName = modal.dataset.exerciseName;
+        //showAddDelMoreCancelModalDialog(exerciseName);
+    }
+
+    eventHandlerGoBackFromIsItNewWorkoutModalBtn = (what) => {
+
+        what.style.color = 'white';
+        what.style.backgroundColor = 'black';
+
+        const modal = what.parentElement.parentElement;
+        modal.style.display = 'none';
+
+        //createDisplayableExerciseList();
+        const exerciseListDiv = document.getElementById('exerciseListDiv');
+        exerciseListDiv.style.display = 'block';
+    }
+
+    //execiseDiv should act as a button and change background color
+    //to indicate press and release
+    eventHandlerExerciseDivPressed = (what) => {
+
+        console.log('eventHandlerExerciseDivPressed');
+
+        const exerciseDiv = what;//.parentElement;
+        exerciseDiv.style.color = 'white'; //'button' text - pressed
+        exerciseDiv.style.backgroundColor = 'dimgrey'; //'button' background
+    }
+
+    //execiseDiv should act as a button and change background color
+    //to indicate press and release
+    eventHandlerExerciseDivReleased = (what) => {
+
+        console.log('eventHandlerExerciseDivReleased');
+
+        const exerciseDiv = what;//.parentElement;
+        exerciseDiv.style.color = 'black'; //'button' text - released
+        exerciseDiv.style.backgroundColor = globalDefaultBackgroundColor;
+
+        const exerciseListDiv = document.getElementById('exerciseListDiv');
+        exerciseListDiv.style.display = 'none'; // hide the exercises list
+
+        const exerciseName = exerciseDiv.children[0].getAttribute('name');
+
+        if (doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded(exerciseName)) {
+
+            hideAddDelMoreCancelModalDialog();
+            showIsThisNewWorkoutModalDialog(exerciseName);
+
+        } else {
+            hideIsThisNewWorkoutModalDialog();
+            showAddDelMoreCancelModalDialog(exerciseName);
+        }
+
+    }
+
+    showIsThisNewWorkoutModalDialog = (exerciseName) => {
+        const modal = document.getElementById('isItNewWorkoutModal');
+        const yesBtn = modal.querySelector('#yesNewWorkoutBtn');
+        yesBtn.style.color = 'white';
+        yesBtn.style.backgroundColor = 'black';
+        const noBtn = modal.querySelector('#noNewWorkoutBtn');
+        noBtn.style.color = 'white';
+        noBtn.style.backgroundColor = 'black';
+        const canBtn = modal.querySelector('#cancelDecidingNewWorkoutBtn');
+        canBtn.style.color = 'white';
+        canBtn.style.backgroundColor = 'black';
+        modal.style.display = 'block'; //show is it a new workout dialog
+        modal.dataset.exerciseName = exerciseName;
+        const isItNewWorkoutModalText = modal.querySelector('#isItNewWorkoutModalText');
+        isItNewWorkoutModalText.innerHTML = exerciseName;
+    }
+
+    showAddDelMoreCancelModalDialog = (exerciseName) => {
+        const modal = document.getElementById('exerciseActionsModal');
+        modal.dataset.exerciseName = exerciseName;
+
+        //in dialog , show exercise name and prev workout sets done
+        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+        const json = JSON.parse(exerciseJsonFromLocalStorage);
+        const exerciseModalText = modal.querySelector('#exerciseModalText');
+        exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + json.prevWkNumSets;
+        modal.style.display = 'block'; //show add/del/etc dialog
+    }
+
+    hideAddDelMoreCancelModalDialog = () => {
+        const modal = document.getElementById('exerciseActionsModal');
+        modal.style.display = 'none';
+    }
+
+    hideIsThisNewWorkoutModalDialog = () => {
+        const modal = document.getElementById('isItNewWorkoutModal');
+        modal.style.display = 'none';
+    }
+
+    sortAllExercisesByElapsedTime = () => {
+        //using the official list at top, get what we can from localStorate.
+        //not all exercises might have ever been done and saved.. in that
+        //case we add a place holder for that exercise.
+        let exerciseList = [];
+        globalExerciseListOfNames.forEach((exerciseName) => {
+            const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+            if (exerciseJsonFromLocalStorage !== null) {
+                exerciseList.push(JSON.parse(exerciseJsonFromLocalStorage));
+            } else {
+                const exercise = {
+                    'name': 'name',
+                    'setidx': 0,
+                    'secList': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    'prevWkNumSets': 0,
+                };
+
+                exercise.name = exerciseName;
+                exerciseList.push(exercise);
+            }
+        });
+
+        exerciseList.sort((a, b) => {
+            const lastidxA = parseInt(a.setidx);
+            const lastidxB = parseInt(b.setidx);
+            if (lastidxA === null || lastidxA === NaN ) { lastidxA = 0; }
+            if (lastidxB === null || lastidxB === NaN ) { lastidxB = 0; }
+            const lastSecsA = +parseFloat(a.secList[lastidxA]).toFixed(0);
+            const lastSecsB = +parseFloat(b.secList[lastidxB]).toFixed(0);
+            return lastSecsB - lastSecsA;
+        });
+
+        const theEquivOfGlobalListOfNamesButSorted = [];
+        exerciseList.forEach((exercise) => {
+            theEquivOfGlobalListOfNamesButSorted.push(exercise.name);
+        });
+
+        return theEquivOfGlobalListOfNamesButSorted;
+    }
+
+    createDisplayableExerciseList = () => {
+        const theEquivOfGlobalListOfNamesButSorted = sortAllExercisesByElapsedTime();
+        const exerciseListDiv = document.getElementById('exerciseListDiv');
+        exerciseListDiv.innerHTML = '';
+        theEquivOfGlobalListOfNamesButSorted.forEach((exerciseName) => {
+            exerciseListDiv.innerHTML =
+                exerciseListDiv.innerHTML + createDisplayableExercise(exerciseName);
+        });
+    }
+
+    createDisplayableExercise = (exerciseName) => {
+
+        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
+
+        let exercise;
+        if (exerciseJsonFromLocalStorage !== null) {
+            exercise = JSON.parse(exerciseJsonFromLocalStorage);
+        } else {
+            exercise = {
+                'name': 'name',
+                'setidx': 0,
+                'secList': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                'prevWkNumSets': 0,
+            };
+
+            exercise.name = exerciseName;
+            const exerciseJsonString = JSON.stringify(exercise);
+            localStorage.setItem(exercise.name, exerciseJsonString);
+        }
+
+        //we have to calculate how many secs ago from current time was latest set, if possible
+        //zero secs in the secList array is not valid, probabl none ever entered(or erased)
+        const secsNow = timeNowInSeconds()
+        const secs = exercise.secList[exercise.setidx]
+        let lastSecs = 0; // <----we will try to set the correct value here
+        if (secs > 0) {
+            lastSecs = secsNow - secs;
+        }
+
+        //next we need to know how to display the lastSecs (if secs, hrs, days)
+        const displayTime = createDisplayableSeconds(lastSecs);
+
+        let backgroundColor = determineBackgroundColorBasedOnNumberOfSetsDone(exercise.setidx);
+
+        //backgroundColor = adjustBackgroundColorIfNeededBasedOnTimeElapsedSinceSet(exercise.setidx, secs, backgroundColor);
+        backgroundColor = adjustBackgroundColorIfNeededBasedOnTimeElapsedSinceSet(exercise.setidx, secs, displayTime, backgroundColor);
+
+        const exerciseHTML =
+            `
+            <div class="exerciseDiv"
+                style="background-color:`+ backgroundColor + `;"
+                name="`+ exercise.name + `"
+                onmousedown="eventHandlerExerciseDivPressed(this)"
+                onmouseup="eventHandlerExerciseDivReleased(this)"
+            >
+                <label class="exerciseLabel" name="`+ exercise.name + `" >` + exercise.setidx + ` ` + exercise.name + `</label>
+                <label class="elapsedTimeLabel id="elapsedTimeLabel">` + displayTime + `</label>
+            </div>
+        <br/>
+        \n`;
+        return exerciseHTML;
+
+    }
+
+    displayWorkoutTime = () => {
+        const wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
+        const wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
+        const workoutTimeLabel = document.getElementById('currentWorkoutTime');
+        workoutTimeLabel.innerHTML = createDisplayableSeconds(wkLatestSecs - wkStartAtSecs);
+    }
+
+    displayCurrentTime = () => {
+        let currentTime = getCurrentTime();
+        document.getElementById('currentTime').innerHTML =
+            ((currentTime.hours   < 10) ? '0' : '') + `${currentTime.hours}:` + ((currentTime.minutes < 10) ? '0' : '') + `${currentTime.minutes}`;
+    }
+
+</script>
+
+</html>
