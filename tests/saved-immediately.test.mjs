@@ -74,6 +74,15 @@ test('a confirmed Reset Everything survives a browser kill straight after', () =
     assert.equal(reopened.workoutTimeText(), '0s');
 });
 
+test('an added exercise survives a browser kill straight after', () => {
+    const app = loadApp();
+    app.click('settingsBtn');
+    app.click('addExerciseBtn');
+    app.typeExerciseToAdd('Chest Fly');
+    app.click('addConfirmBtn');
+    assert.equal(reopenBrowser(app).rowsOnScreen().some((row) => row.name === 'Chest Fly'), true);
+});
+
 test('a reopened browser draws the same list', () => {
     const app = loadApp();
     app.addSets('Bench', 3);

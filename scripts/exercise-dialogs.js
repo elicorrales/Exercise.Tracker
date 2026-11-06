@@ -19,7 +19,7 @@ showIsThisNewWorkoutModalDialog = (exerciseId) => {
     modal.style.display = 'block'; //show is it a new workout dialog
     modal.dataset.exerciseId = exerciseId;
     const isItNewWorkoutModalText = modal.querySelector('#isItNewWorkoutModalText');
-    isItNewWorkoutModalText.innerHTML = readStoredExercise(exerciseId).name;
+    isItNewWorkoutModalText.innerHTML = escapeTextForPage(readStoredExercise(exerciseId).name);
 }
 
 showAddDelMoreCancelModalDialog = (exerciseId) => {
@@ -29,7 +29,7 @@ showAddDelMoreCancelModalDialog = (exerciseId) => {
     //in dialog , show exercise name and prev workout sets done
     const json = readStoredExercise(exerciseId);
     const exerciseModalText = modal.querySelector('#exerciseModalText');
-    exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + previousWorkoutSetCount(json);
+    exerciseModalText.innerHTML = escapeTextForPage(json.name) + '<br/>Prev Wk Sets:' + previousWorkoutSetCount(json);
     modal.style.display = 'block'; //show add/del/etc dialog
 }
 
@@ -51,6 +51,19 @@ showResetConfirmationModalDialog = () => {
 hideResetConfirmationModalDialog = () => {
     const modal = document.getElementById('resetConfirmationModal');
     modal.style.display = 'none';
+}
+
+//a dialog button stays highlighted from its press until this runs on release
+const resetButtonColours = (button) => {
+    button.style.color = 'white';
+    button.style.backgroundColor = 'black';
+}
+
+hideEveryDialog = () => {
+    ['exerciseActionsModal', 'isItNewWorkoutModal', 'settingsModal', 'resetConfirmationModal',
+        'renamePickerModal', 'renameEntryModal', 'renameSetsModal', 'addExerciseModal'].forEach((dialogId) => {
+        document.getElementById(dialogId).style.display = 'none';
+    });
 }
 
 hideAddDelMoreCancelModalDialog = () => {

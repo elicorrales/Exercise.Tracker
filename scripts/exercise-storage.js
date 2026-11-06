@@ -35,6 +35,17 @@ saveExercise = (exercise) => {
     localStorage.setItem(storageKeyForExercise(exercise.id), JSON.stringify(exercise));
 }
 
+renameExerciseKeepingSets = (exerciseId, newName) => {
+    const exercise = readStoredExercise(exerciseId);
+    exercise.name = newName;
+    saveExercise(exercise);
+}
+
+//the slot is being reused for a different exercise: same id, nothing of the old history
+renameExerciseClearingSets = (exerciseId, newName) => {
+    saveExercise(createBlankExercise(exerciseId, newName));
+}
+
 readExerciseIds = () => {
     const catalogJsonFromLocalStorage = localStorage.getItem(EXERCISE_CATALOG_KEY);
     if (catalogJsonFromLocalStorage === null) {
@@ -60,6 +71,19 @@ seedDefaultExercisesIfNeeded = () => {
         'nextExerciseNumber': exerciseIds.length + 1,
         'exerciseIds': exerciseIds,
     };
+    localStorage.setItem(EXERCISE_CATALOG_KEY, JSON.stringify(catalog));
+}
+
+//the record is written first and the catalog last, as in the first load. a browser killed
+//between the two leaves a record nothing lists, and the next add simply reuses its id.
+addStoredExercise = (exerciseName) => {
+    const catalog = JSON.parse(localStorage.getItem(EXERCISE_CATALOG_KEY));
+    const exerciseId = `exercise-${catalog.nextExerciseNumber}`;
+
+    saveExercise(createBlankExercise(exerciseId, exerciseName));
+
+    catalog.exerciseIds.push(exerciseId);
+    catalog.nextExerciseNumber = catalog.nextExerciseNumber + 1;
     localStorage.setItem(EXERCISE_CATALOG_KEY, JSON.stringify(catalog));
 }
 

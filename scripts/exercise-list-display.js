@@ -61,7 +61,7 @@ createDisplayableExercise = (exerciseId) => {
                 onmousedown="eventHandlerExerciseDivPressed(this)"
                 onmouseup="eventHandlerExerciseDivReleased(this)"
             >
-                <label class="exerciseLabel" name="`+ exercise.id + `" >` + exercise.setidx + ` ` + exercise.name + `</label>
+                <label class="exerciseLabel" name="`+ exercise.id + `" >` + exercise.setidx + ` ` + escapeTextForPage(exercise.name) + `</label>
                 <label class="elapsedTimeLabel id="elapsedTimeLabel">` + displayTime + `</label>
             </div>
         <br/>

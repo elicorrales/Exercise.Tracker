@@ -5,6 +5,8 @@
 <script src="scripts/clock.js"></script>
 <script src="scripts/exercise-storage.js"></script>
 <script src="scripts/workout-time-storage.js"></script>
+<script src="scripts/exercise-name-rules.js"></script>
+<script src="scripts/page-text-escaping.js"></script>
 <script src="scripts/elapsed-time-text.js"></script>
 <script src="scripts/exercise-row-colours.js"></script>
 <script src="scripts/workout-rules.js"></script>
@@ -12,6 +14,8 @@
 <script src="scripts/exercise-dialogs.js"></script>
 <script src="scripts/workout-time-display.js"></script>
 <script src="scripts/button-press-handlers.js"></script>
+<script src="scripts/rename-exercise-flow.js"></script>
+<script src="scripts/add-exercise-flow.js"></script>
 <script src="scripts/app-start.js"></script>
 
 <head>
@@ -52,13 +56,68 @@
                 <p> <label class="exerciseModalBtn" id="closeSettingsBtn"
                         onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
                         onmouseup="eventHandlerReturnToListFromSettings(this)">Go Back</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="addExerciseBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerOpenAddExercise(this)">Add New Exer</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="renameExerciseBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerOpenRenamePicker(this)">Rename Exer</label><br /> </p>
                 <p> <label class="exerciseModalBtn" id="resetBtn"
                         onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
                         onmouseup="eventHandlerAskToConfirmReset(this)">Reset Everything</label><br /> </p>
             </div>
 
-            <!-- keep the title to one line and Yes first: Go Back then sits where Reset Everything
-                 was, so an accidental double tap cannot confirm the reset -->
+            <div class="exerciseActionsModal" id="addExerciseModal" style="display: none;">
+                <p class="exerciseModalText">Add:</p>
+                <p> <input class="exerciseNameInput" id="addNameInput" type="text" maxlength="12" autocomplete="off"> </p>
+                <p class="exerciseModalText" id="addMessage"></p>
+                <p> <label class="exerciseModalBtn" id="addConfirmBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerAddNewExercise(this)">Add</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="addBackBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackFromAddExercise(this)">Go Back</label><br /> </p>
+            </div>
+
+            <div class="exerciseActionsModal" id="renamePickerModal" style="display: none;">
+                <p class="exerciseModalText">Rename:</p>
+                <p> <label class="exerciseModalBtn" id="renamePickerBackBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackFromRenamePicker(this)">Go Back</label><br /> </p>
+                <div id="renamePickerList">
+                    <!-- filled with one row per exercise when the picker opens -->
+                </div>
+            </div>
+
+            <div class="exerciseActionsModal" id="renameEntryModal" style="display: none;">
+                <p class="exerciseModalText">New name:</p>
+                <p> <input class="exerciseNameInput" id="renameNameInput" type="text" maxlength="12" autocomplete="off"> </p>
+                <p class="exerciseModalText" id="renameMessage"></p>
+                <p> <label class="exerciseModalBtn" id="renameNextBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerCheckNewExerciseName(this)">Next</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="renameEntryBackBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackFromRenameEntry(this)">Go Back</label><br /> </p>
+            </div>
+
+            <!-- the save button's text, and whether Clear Set Hist shows, depend on whether the
+                 exercise has any history. the app sets both when this dialog opens -->
+            <div class="exerciseActionsModal" id="renameSetsModal" style="display: none;">
+                <p class="exerciseModalText" id="renameSetsTitle"> New Name Here </p>
+                <p> <label class="exerciseModalBtn" id="keepSetsBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerKeepSetsOfRenamedExercise(this)">Save Set Hist</label><br /> </p>
+                <p id="clearSetsRow"> <label class="exerciseModalBtn" id="clearSetsBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerClearSetsOfRenamedExercise(this)">Clear Set Hist</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="renameSetsBackBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackFromRenameSets(this)">Go Back</label><br /> </p>
+            </div>
+
+            <!-- Reset Everything is the last Settings button, and this dialog has only two, so an
+                 accidental double tap cannot land on Yes -->
             <div class="exerciseActionsModal" id="resetConfirmationModal" style="display: none;">
                 <p class="exerciseModalText">Reset all?</p>
                 <p> <label class="exerciseModalBtn" id="confirmResetBtn"

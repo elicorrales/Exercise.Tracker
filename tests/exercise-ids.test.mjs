@@ -94,7 +94,7 @@ test('a row carries the id for the tap, and shows the name to the user', () => {
     assert.doesNotMatch(app.listMarkup(), /name="Bench"/);
 });
 
-test('two exercises can share a name without sharing their sets', () => {
+test('sets follow the id, not the name, even if storage ever holds a clash', () => {
     const app = loadApp();
     const benchId = app.exerciseId('Bench');
     renameInStorage(app, 'Shrugs', 'Bench');

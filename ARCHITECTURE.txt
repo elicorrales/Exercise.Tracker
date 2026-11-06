@@ -18,6 +18,10 @@ scripts/default-exercise-names.js  The exercises a new user starts with. Read on
 scripts/clock.js ................. The only place the app reads the system clock.
 scripts/exercise-storage.js ...... The only place exercise records are read or written.
 scripts/workout-time-storage.js .. The only place the workout's two times are stored.
+scripts/exercise-name-rules.js ... What a typed name may be, and how names are compared.
+scripts/page-text-escaping.js .... Makes typed text safe to place in the page's markup.
+scripts/rename-exercise-flow.js .. The rename screens: pick, type, keep or clear sets.
+scripts/add-exercise-flow.js ..... The Add screen: type a name, a new exercise joins the list.
 scripts/elapsed-time-text.js ..... Turns seconds into on-screen text such as 2.5h.
 scripts/exercise-row-colours.js .. Picks a row's colour from set count and age.
 scripts/workout-rules.js ......... Decides same workout, new workout, or ask, and rolls
@@ -67,7 +71,16 @@ first load writes the records first and the catalog last.
 
 Two exercises may not share a name (the owner's decision). Names are compared after
 trimming, collapsing inner whitespace and lowercasing. That comparison form is never saved.
-This is enforced when a name is entered, in the rename step, not by storage.
+Saved names keep clean spacing and the user's capitals, up to 12 characters. These rules
+are enforced when a name is entered, by exercise-name-rules, not by storage.
+
+Typed names are written into the page through innerHTML, so every place that does this
+must call escapeTextForPage.
+
+A rename may be a name fix, or the user may be reusing the slot for a different exercise.
+So an exercise with history offers Save Set Hist, Clear Set Hist and Go Back, and one with
+no history offers Save and Go Back (the owner's design). Go Back returns to the main list.
+The new name and that choice are saved in one write, and nothing is saved until the answer.
 
 
 PROJECT LAWS
@@ -93,13 +106,6 @@ fake clock, storage and page. It cannot show layout, so the owner's host test st
 
 PINNED QUESTIONS (decided later, not forgotten)
 -------------------------------------------------------------------------------------
-- RENAME MUST ASK ABOUT HISTORY (the owner's requirement). A rename may be a simple name
-  fix, or the user may be reusing the slot as a completely different exercise. So a rename
-  asks whether to keep or clear the current and previous sets. The new name and that
-  choice are saved together in one write, and nothing is saved until the user answers.
-- TYPED NAMES ARE NOT SAFE IN THE PAGE YET. Exercise names go into innerHTML. Today they
-  are all defaults. Before users can type a name, the name must be escaped or written as
-  text, so that a name like <b> or a quote cannot break the page.
 - RENDER ROOT ADDRESS. Render serves index.html at the site root. The app is
   exercise.tracker.html, so it needs either the full path in the address or a Render
   rewrite rule. Must be decided at the Render deploy step.
@@ -126,9 +132,10 @@ imports, so the tag order in exercise.tracker.html states this order. Top of thi
 the highest layer and loads last.
 
 5. Start ......... app-start
-4. Input ......... button-press-handlers
+4. Input ......... button-press-handlers, rename-exercise-flow, add-exercise-flow
 3. Screen ........ exercise-list-display, exercise-dialogs, workout-time-display
-2. Decisions ..... workout-rules, exercise-row-colours, elapsed-time-text
+2. Decisions ..... workout-rules, exercise-name-rules, exercise-row-colours,
+                   elapsed-time-text, page-text-escaping
 1. Foundations ... workout-time-limits, default-exercise-names, clock, exercise-storage,
                    workout-time-storage
 

@@ -167,9 +167,7 @@ eventHandlerOpenSettings = (what) => {
     what.style.backgroundColor = '';
 
     document.getElementById('exerciseListDiv').style.display = 'none';
-    hideAddDelMoreCancelModalDialog();
-    hideIsThisNewWorkoutModalDialog();
-    hideResetConfirmationModalDialog();
+    hideEveryDialog();
     showSettingsModalDialog();
 }
 

@@ -44,6 +44,11 @@ isExerciseLastSetFromEarlierWorkout = (exercise) => {
     return !(lastSetSeconds >= workoutStartedAtSeconds);
 }
 
+//any trace of past training: current sets, a previous count, or a kept earlier workout
+hasExerciseHistory = (exercise) => {
+    return (exercise.setidx > 0) || (exercise.prevWkNumSets > 0) || (exercise.stateBeforeThisWorkout !== undefined);
+}
+
 //the set count of this exercise's previous workout, as the user should see it right now.
 //the stored count only updates when the next set is added, so until then the sets on
 //record from an earlier workout ARE the previous workout.

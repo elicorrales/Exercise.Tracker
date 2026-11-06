@@ -14,13 +14,17 @@ import { fileURLToPath } from 'node:url';
 const PROJECT_FOLDER = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONE_HOUR = 3600;
 const QUESTION_DIALOG_BUTTONS = ['yesNewWorkoutBtn', 'noNewWorkoutBtn', 'cancelDecidingNewWorkoutBtn'];
-const SETTINGS_DIALOG_BUTTONS = ['closeSettingsBtn', 'resetBtn'];
+const SETTINGS_DIALOG_BUTTONS = ['closeSettingsBtn', 'addExerciseBtn', 'renameExerciseBtn', 'resetBtn'];
 const RESET_CONFIRMATION_BUTTONS = ['confirmResetBtn', 'cancelResetBtn'];
 const DIALOG_NAMES_BY_ID = {
     exerciseActionsModal: 'add/del',
     isItNewWorkoutModal: 'question',
     settingsModal: 'settings',
     resetConfirmationModal: 'reset confirmation',
+    renamePickerModal: 'rename picker',
+    renameEntryModal: 'rename entry',
+    renameSetsModal: 'rename sets question',
+    addExerciseModal: 'add exercise',
 };
 
 export const pageMarkup = readFileSync(join(PROJECT_FOLDER, 'exercise.tracker.html'), 'utf8');
@@ -149,6 +153,25 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
         questionText: () => element('isItNewWorkoutModalText').innerHTML,
         dialogExerciseId: (dialogId) => element(dialogId).dataset.exerciseId,
         listMarkup: () => element('exerciseListDiv').innerHTML,
+
+        /** The rename picker's rows, read from the markup the app really wrote. */
+        pickerMarkup: () => element('renamePickerList').innerHTML,
+        exercisesInPicker: () => [...app.pickerMarkup().matchAll(/<label[^>]*>([^<]+)<\/label>/g)].map((match) => match[1]),
+        pickExerciseToRename: (exerciseName) => {
+            const exerciseId = app.exerciseId(exerciseName);
+            const rowMarkup = app.pickerMarkup().split('<label').find((row) => row.includes(`name="${exerciseId}"`));
+            const releaseFunction = /onmouseup="(\w+)\(this\)"/.exec(rowMarkup)[1];
+            context[releaseFunction]({ style: {}, getAttribute: () => exerciseId });
+        },
+        typeNewName: (typedName) => { element('renameNameInput').value = typedName; },
+        typedName: () => element('renameNameInput').value,
+        renameMessage: () => element('renameMessage').innerHTML,
+        typeExerciseToAdd: (typedName) => { element('addNameInput').value = typedName; },
+        exerciseToAdd: () => element('addNameInput').value,
+        addMessage: () => element('addMessage').innerHTML,
+        renameTitle: () => element('renameSetsTitle').innerHTML,
+        saveButtonText: () => element('keepSetsBtn').innerHTML,
+        clearButtonIsOffered: () => element('clearSetsRow').style.display !== 'none',
         workoutTimeText: () => element('currentWorkoutTime').innerHTML,
 
         /** The list as drawn: exercise name, set count, elapsed text and colour, top row first. */

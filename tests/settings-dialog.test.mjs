@@ -117,7 +117,7 @@ test('the gear replaces the confirmation too', () => {
     assert.equal(app.visibleScreen(), 'settings');
 });
 
-test('a double tap on Reset Everything lands on Go Back, not Yes', () => {
+test('the confirmation has only two buttons, so a double tap on Reset Everything confirms nothing', () => {
     const buttons = [...markupOfDialog('resetConfirmationModal').matchAll(/<label class="exerciseModalBtn" id="(\w+)"/g)].map((match) => match[1]);
     assert.deepEqual(buttons, ['confirmResetBtn', 'cancelResetBtn']);
 });
@@ -127,13 +127,18 @@ test('the add/del dialog holds only Add Set, Del Set and Cancel', () => {
     assert.deepEqual(buttons, ['addSetBtn', 'delSetBtn', 'cancelBtn']);
 });
 
-test('Close comes before Reset Everything in the Settings dialog', () => {
+test('Reset Everything comes last in the Settings dialog', () => {
     const buttons = [...markupOfDialog('settingsModal').matchAll(/<label class="exerciseModalBtn" id="(\w+)"/g)].map((match) => match[1]);
-    assert.deepEqual(buttons, ['closeSettingsBtn', 'resetBtn']);
+    assert.deepEqual(buttons, ['closeSettingsBtn', 'addExerciseBtn', 'renameExerciseBtn', 'resetBtn']);
 });
 
 test('every way back out of a dialog is labelled Go Back', () => {
-    for (const buttonId of ['cancelDecidingNewWorkoutBtn', 'closeSettingsBtn', 'cancelResetBtn']) {
+    for (const buttonId of ['cancelDecidingNewWorkoutBtn', 'closeSettingsBtn', 'cancelResetBtn', 'renamePickerBackBtn', 'renameEntryBackBtn', 'renameSetsBackBtn', 'addBackBtn']) {
         assert.match(pageMarkup, new RegExp(`id="${buttonId}"[^<]*>Go Back</label>`), buttonId);
     }
+});
+
+test('the Settings buttons are labelled Add New Exer and Rename Exer', () => {
+    assert.match(pageMarkup, /id="addExerciseBtn"[^<]*>Add New Exer<\/label>/);
+    assert.match(pageMarkup, /id="renameExerciseBtn"[^<]*>Rename Exer<\/label>/);
 });
