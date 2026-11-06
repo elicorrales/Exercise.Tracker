@@ -2,10 +2,10 @@
 // Shows and hides the dialogs: add/del, the "new or same workout" question, Settings, and
 // the reset confirmation.
 // Why it is its own file: which dialog is on screen is a separate job from what its buttons
-// do. Each dialog carries the exercise it was opened for in its data-exercise-name, and the
+// do. Each dialog carries the exercise it was opened for in its data-exercise-id, and the
 // button handlers read that back.
 
-showIsThisNewWorkoutModalDialog = (exerciseName) => {
+showIsThisNewWorkoutModalDialog = (exerciseId) => {
     const modal = document.getElementById('isItNewWorkoutModal');
     const yesBtn = modal.querySelector('#yesNewWorkoutBtn');
     yesBtn.style.color = 'white';
@@ -17,17 +17,17 @@ showIsThisNewWorkoutModalDialog = (exerciseName) => {
     canBtn.style.color = 'white';
     canBtn.style.backgroundColor = 'black';
     modal.style.display = 'block'; //show is it a new workout dialog
-    modal.dataset.exerciseName = exerciseName;
+    modal.dataset.exerciseId = exerciseId;
     const isItNewWorkoutModalText = modal.querySelector('#isItNewWorkoutModalText');
-    isItNewWorkoutModalText.innerHTML = exerciseName;
+    isItNewWorkoutModalText.innerHTML = readStoredExercise(exerciseId).name;
 }
 
-showAddDelMoreCancelModalDialog = (exerciseName) => {
+showAddDelMoreCancelModalDialog = (exerciseId) => {
     const modal = document.getElementById('exerciseActionsModal');
-    modal.dataset.exerciseName = exerciseName;
+    modal.dataset.exerciseId = exerciseId;
 
     //in dialog , show exercise name and prev workout sets done
-    const json = readStoredExercise(exerciseName);
+    const json = readStoredExercise(exerciseId);
     const exerciseModalText = modal.querySelector('#exerciseModalText');
     exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + previousWorkoutSetCount(json);
     modal.style.display = 'block'; //show add/del/etc dialog

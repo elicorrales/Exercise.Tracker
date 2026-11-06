@@ -14,8 +14,7 @@ exercise.tracker.html ... The app. All new work happens here and in files it loa
 exercise.tracker.css .... All visual styling. Row colours are the exception: they carry
                           meaning, so the scripts set them inline.
 scripts/workout-time-limits.js ... The time spans workout decisions are built on.
-scripts/exercise-names.js ........ The fixed exercise list. Replaced by user-managed
-                                   exercises later.
+scripts/default-exercise-names.js  The exercises a new user starts with. Read only once.
 scripts/clock.js ................. The only place the app reads the system clock.
 scripts/exercise-storage.js ...... The only place exercise records are read or written.
 scripts/workout-time-storage.js .. The only place the workout's two times are stored.
@@ -56,6 +55,21 @@ address, including http versus https.
   index2.html's stored data.
 
 
+HOW EXERCISES ARE STORED
+-------------------------------------------------------------------------------------
+exerciseCatalog ...... The list of ids in display order, and the next id number. Ids are
+                       numbered from a stored counter, so a deleted id is never reused.
+exercise:<id> ........ One record per exercise: id, name, set times, set count, previous
+                       count, and the state kept for undoing a new workout's only set.
+
+An id never changes. A name can. Only the screen and the duplicate check use the name. The
+first load writes the records first and the catalog last.
+
+Two exercises may not share a name (the owner's decision). Names are compared after
+trimming, collapsing inner whitespace and lowercasing. That comparison form is never saved.
+This is enforced when a name is entered, in the rename step, not by storage.
+
+
 PROJECT LAWS
 -------------------------------------------------------------------------------------
 1. EVERY USER CHOICE IS SAVED THE MOMENT IT IS MADE. The owner's words: "i can not control
@@ -79,6 +93,13 @@ fake clock, storage and page. It cannot show layout, so the owner's host test st
 
 PINNED QUESTIONS (decided later, not forgotten)
 -------------------------------------------------------------------------------------
+- RENAME MUST ASK ABOUT HISTORY (the owner's requirement). A rename may be a simple name
+  fix, or the user may be reusing the slot as a completely different exercise. So a rename
+  asks whether to keep or clear the current and previous sets. The new name and that
+  choice are saved together in one write, and nothing is saved until the user answers.
+- TYPED NAMES ARE NOT SAFE IN THE PAGE YET. Exercise names go into innerHTML. Today they
+  are all defaults. Before users can type a name, the name must be escaped or written as
+  text, so that a name like <b> or a quote cannot break the page.
 - RENDER ROOT ADDRESS. Render serves index.html at the site root. The app is
   exercise.tracker.html, so it needs either the full path in the address or a Render
   rewrite rule. Must be decided at the Render deploy step.
@@ -108,7 +129,7 @@ the highest layer and loads last.
 4. Input ......... button-press-handlers
 3. Screen ........ exercise-list-display, exercise-dialogs, workout-time-display
 2. Decisions ..... workout-rules, exercise-row-colours, elapsed-time-text
-1. Foundations ... workout-time-limits, exercise-names, clock, exercise-storage,
+1. Foundations ... workout-time-limits, default-exercise-names, clock, exercise-storage,
                    workout-time-storage
 
 Only the two storage files may touch localStorage (craft rule 3.3). A test enforces this.

@@ -108,11 +108,16 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
             return screensShowing.join(' + ') || 'nothing';
         },
 
-        tapRow: (exerciseName) => {
-            const row = { style: {}, children: [{ getAttribute: () => exerciseName }] };
+        /** The id of the exercise currently holding this name. Tests speak in names, as users do. */
+        exerciseId: (exerciseName) => [...context.readExerciseIds()]
+            .find((id) => context.readStoredExercise(id).name === exerciseName),
+
+        tapRowById: (exerciseId) => {
+            const row = { style: {}, children: [{ getAttribute: () => exerciseId }] };
             context.eventHandlerExerciseDivPressed(row);
             context.eventHandlerExerciseDivReleased(row);
         },
+        tapRow: (exerciseName) => app.tapRowById(app.exerciseId(exerciseName)),
         pressOnly: (buttonId) => fireButtonEvent(buttonId, 'onmousedown'),
         releaseOnly: (buttonId) => fireButtonEvent(buttonId, 'onmouseup'),
         click: (buttonId) => {
@@ -138,9 +143,12 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
             now += 1;
         },
 
-        storedExercise: (exerciseName) => JSON.parse(store.get(exerciseName)),
+        storedExercise: (exerciseName) => context.readStoredExercise(app.exerciseId(exerciseName)),
         setCount: (exerciseName) => app.storedExercise(exerciseName).setidx,
         dialogText: () => element('exerciseModalText').innerHTML,
+        questionText: () => element('isItNewWorkoutModalText').innerHTML,
+        dialogExerciseId: (dialogId) => element(dialogId).dataset.exerciseId,
+        listMarkup: () => element('exerciseListDiv').innerHTML,
         workoutTimeText: () => element('currentWorkoutTime').innerHTML,
 
         /** The list as drawn: exercise name, set count, elapsed text and colour, top row first. */

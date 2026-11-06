@@ -5,6 +5,7 @@
 
 window.onload = function () {
 
+    seedDefaultExercisesIfNeeded();
     initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
 
     //workout time will be manually updates right at load, then auto thereafter

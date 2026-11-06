@@ -20,12 +20,10 @@ eventHandlerResetLocalStorage = (what) => {
     what.style.color = 'white';
     what.style.backgroundColor = 'black';
 
-    globalExerciseListOfNames.forEach((exerciseName) => {
-        removeStoredExercise(exerciseName);
-    });
-
+    removeAllExercises();
     removeWorkoutTimes();
 
+    seedDefaultExercisesIfNeeded();
     initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
     displayWorkoutTime();
     createDisplayableExerciseList();
@@ -58,27 +56,27 @@ eventHandlerHighlightWorkoutChoiceBtn = (what) => {
 }
 
 eventHandlerStartNewWorkout = (what) => {
-    const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
-    adjustEverythingToStartNewWorkout(exerciseName);
+    const exerciseId = what.parentElement.parentElement.dataset.exerciseId;
+    adjustEverythingToStartNewWorkout(exerciseId);
     displayWorkoutTime();
     hideIsThisNewWorkoutModalDialog();
-    showAddDelMoreCancelModalDialog(exerciseName);
+    showAddDelMoreCancelModalDialog(exerciseId);
 }
 
 eventHandlerContinueSameWorkout = (what) => {
     saveWorkoutLatestActivityAtSeconds(timeNowInSeconds());
-    const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+    const exerciseId = what.parentElement.parentElement.dataset.exerciseId;
     hideIsThisNewWorkoutModalDialog();
-    showAddDelMoreCancelModalDialog(exerciseName);
+    showAddDelMoreCancelModalDialog(exerciseId);
 }
 
 eventHandlerAddSet = (what) => {
     //grab data from dialog(overall parent)
-    const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+    const exerciseId = what.parentElement.parentElement.dataset.exerciseId;
 
-    adjustExerciseToBePartOfCurrentWorkoutAsNeeded(exerciseName);
+    adjustExerciseToBePartOfCurrentWorkoutAsNeeded(exerciseId);
 
-    const json = readStoredExercise(exerciseName);
+    const json = readStoredExercise(exerciseId);
 
     //inc the current set and grab time of new set
     const len = json.secList.length;
@@ -106,9 +104,9 @@ eventHandlerAddSet = (what) => {
 
 eventHandlerDelSet = (what) => {
     //grab data from dialog(overall parent)
-    const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
+    const exerciseId = what.parentElement.parentElement.dataset.exerciseId;
 
-    const json = readStoredExercise(exerciseName);
+    const json = readStoredExercise(exerciseId);
 
     removeLatestSetFromExercise(json);
 
@@ -212,16 +210,16 @@ eventHandlerExerciseDivReleased = (what) => {
     const exerciseListDiv = document.getElementById('exerciseListDiv');
     exerciseListDiv.style.display = 'none'; // hide the exercises list
 
-    const exerciseName = exerciseDiv.children[0].getAttribute('name');
+    const exerciseId = exerciseDiv.children[0].getAttribute('name');
 
-    if (doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded(exerciseName)) {
+    if (doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded(exerciseId)) {
 
         hideAddDelMoreCancelModalDialog();
-        showIsThisNewWorkoutModalDialog(exerciseName);
+        showIsThisNewWorkoutModalDialog(exerciseId);
 
     } else {
         hideIsThisNewWorkoutModalDialog();
-        showAddDelMoreCancelModalDialog(exerciseName);
+        showAddDelMoreCancelModalDialog(exerciseId);
     }
 
 }

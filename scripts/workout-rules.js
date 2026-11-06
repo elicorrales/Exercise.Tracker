@@ -19,7 +19,7 @@ initializeCurrentWorkoutTimesInLocalStorageAsNeeded = () => {
     }
 }
 
-adjustEverythingToStartNewWorkout = (exerciseName) => {
+adjustEverythingToStartNewWorkout = (exerciseId) => {
     //this means we the last set time, become the workout start time(weve moved up the workout start time)
     //actually this seems very similar to the FIRS TIME run.
     saveWorkoutStartedAtSeconds(timeNowInSeconds());
@@ -58,11 +58,11 @@ previousWorkoutSetCount = (exercise) => {
 //if user clicks to add another set, to an exercise,
 //we need to know if the new set is added to the displayed sets for that exercise,(current workout)
 //or if we need to zero stuff and this is the first set
-adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
+adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseId) => {
 
     const timeNowSeconds = timeNowInSeconds();
 
-    const json = readStoredExercise(exerciseName);
+    const json = readStoredExercise(exerciseId);
 
     //if the latest set belongs to this workout, the next set just continues the count
     if (!isExerciseLastSetFromEarlierWorkout(json)) {
@@ -105,9 +105,9 @@ removeLatestSetFromExercise = (exercise) => {
     }
 }
 
-getExerciseLatestSetSeconds = (exerciseName) => {
+getExerciseLatestSetSeconds = (exerciseId) => {
     //we also have to look at the specific exercise times
-    const json = readStoredExercise(exerciseName);
+    const json = readStoredExercise(exerciseId);
     if (json === null) {
         return 0;
     }
@@ -117,7 +117,7 @@ getExerciseLatestSetSeconds = (exerciseName) => {
     return json.secList[setidx];
 }
 
-doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded = (exerciseName) => {
+doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded = (exerciseId) => {
 
     //we have to look at global workout time
     let wkStartAtSecs = readWorkoutStartedAtSeconds().toFixed(0);
@@ -149,7 +149,7 @@ doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsN
 
         const isWorkoutUnderMaxTimeBetweenSets = ((timeNowInSeconds() - wkLatestSecs) < T_MAX_TIME_BETWEEN_SETS);
 
-        //const exerciseLatestSeconds = getExerciseLatestSetSeconds(exerciseName);
+        //const exerciseLatestSeconds = getExerciseLatestSetSeconds(exerciseId);
         //const isExerciseLatestSecondsLessThanMaxTimeBetweenSets = ((timeNowInSeconds() - exerciseLatestSeconds) < T_MAX_TIME_BETWEEN_SETS);
         //const isExerciseHaveZeroSetsZeroTime = (exerciseLatestSeconds == 0);
 
@@ -169,7 +169,7 @@ doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsN
         // are we past current workout?
         if ((timeNowInSeconds() - wkLatestSecs) > T_MAX_WK_TIME) {
 
-            adjustEverythingToStartNewWorkout(exerciseName);
+            adjustEverythingToStartNewWorkout(exerciseId);
 
             return false;//we knew what to do, no need to ask user
         }
