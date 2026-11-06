@@ -75,3 +75,11 @@
     color: white;
     font-size: 100px;
 }
+
+.exerciseNameInput {
+    font-size: 100px;
+    width: 100%;
+    box-sizing: border-box;
+    color: black;
+    background-color: white;
+}

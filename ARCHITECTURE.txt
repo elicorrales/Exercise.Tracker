@@ -32,9 +32,9 @@ scripts/exercise-dialogs.js ...... Shows and hides the two dialogs.
 scripts/button-press-handlers.js . What each button and row does on press and release.
 scripts/workout-time-display.js .. Writes the workout time at the top.
 scripts/app-start.js ............. Starts the app on load and sets up the refresh timers.
-index2.html ............. Reference only. A browser "Save As" snapshot of the live page.
+index2.orig.html ........ Reference only. A browser "Save As" snapshot of the live page.
                           NEVER edited. Its visible dialog state is a snapshot artifact.
-index.html .............. Disregarded. Not part of this project.
+index.possum.html ....... Disregarded. Not part of this project.
 
 
 HOW WE WORK
@@ -53,11 +53,11 @@ The live app is used only on the owner's phone. Browsers separate stored data by
 address, including http versus https.
 
 - A page opened from the shared folder has its own empty data. Testing there is safe.
-- The revised app will be hosted on render.com, a different address from index2.html's
+- The revised app will be hosted on render.com, a different address from index2.orig.html's
   site. The two will NOT share data, and that separation is the owner's intent. The new
   app starts empty there, and the owner moves over manually.
 - So the storage format is free to change. Nothing here has to stay compatible with
-  index2.html's stored data.
+  index2.orig.html's stored data.
 
 
 HOW EXERCISES ARE STORED
