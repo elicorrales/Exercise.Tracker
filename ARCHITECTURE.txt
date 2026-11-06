@@ -19,6 +19,8 @@ scripts/exercise-names.js ........ The fixed exercise list. Replaced by user-man
 scripts/clock.js ................. The only place the app reads the system clock.
 scripts/elapsed-time-text.js ..... Turns seconds into on-screen text such as 2.5h.
 scripts/exercise-row-colours.js .. Picks a row's colour from set count and age.
+scripts/workout-rules.js ......... Decides same workout, new workout, or ask, and rolls
+                                   an exercise into its previous-workout state.
 index2.html ............. Reference only. A browser "Save As" snapshot of the live page.
                           NEVER edited. Its visible dialog state is a snapshot artifact.
 index.html .............. Disregarded. Not part of this project.
