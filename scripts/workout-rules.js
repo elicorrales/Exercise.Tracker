@@ -28,6 +28,33 @@ adjustEverythingToStartNewWorkout = (exerciseName) => {
 
 }
 
+//the one rule for whether an exercise's latest set belongs to an earlier workout.
+//a set that happened since the workout started belongs to this workout, so the user's
+//Same or New Workout answer decides this, however long the gap was.
+isExerciseLastSetFromEarlierWorkout = (exercise) => {
+    const lastSetIdx = parseInt(exercise.setidx);
+    const lastSetSeconds = parseFloat(exercise.secList[lastSetIdx]).toFixed(0);
+
+    //i think if setidx is 0 and secList(idx) is 0, then
+    //there is no latest set to judge
+    if ((lastSetIdx == 0) && (lastSetSeconds == 0)) {
+        return false;
+    }
+
+    const workoutStartedAtSeconds = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds'));
+    return !(lastSetSeconds >= workoutStartedAtSeconds);
+}
+
+//the set count of this exercise's previous workout, as the user should see it right now.
+//the stored count only updates when the next set is added, so until then the sets on
+//record from an earlier workout ARE the previous workout.
+previousWorkoutSetCount = (exercise) => {
+    if (isExerciseLastSetFromEarlierWorkout(exercise)) {
+        return exercise.setidx;
+    }
+    return exercise.prevWkNumSets;
+}
+
 //THIS CALLED WHEN SET TO BE ADDED
 //if user clicks to add another set, to an exercise,
 //we need to know if the new set is added to the displayed sets for that exercise,(current workout)
@@ -40,21 +67,8 @@ adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
 
     const json = JSON.parse(exerciseJsonFromLocalStorage);
 
-    const lastSetIdx = parseInt(json.setidx);
-    const lastSetSeconds = parseFloat(json.secList[lastSetIdx]).toFixed(0);
-
-    //i think if setidx is 0 and secList(idx) is 0, then
-    //it is safe to assume we dont have to do anything
-    if ((lastSetIdx == 0) && (lastSetSeconds == 0)) {
-        return;
-    }
-
-    //if the latest set happened since the workout started, it belongs to this workout
-    //and the next set just continues the count. comparing against the workout start means
-    //the user's Same or New Workout answer decides this, however long the gap was.
-    const workoutStartedAtSeconds = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds'));
-    const isLastSetInCurrentWorkout = (lastSetSeconds >= workoutStartedAtSeconds);
-    if (isLastSetInCurrentWorkout) {
+    //if the latest set belongs to this workout, the next set just continues the count
+    if (!isExerciseLastSetFromEarlierWorkout(json)) {
         return;
     }
 

@@ -29,7 +29,7 @@ showAddDelMoreCancelModalDialog = (exerciseName) => {
     const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
     const json = JSON.parse(exerciseJsonFromLocalStorage);
     const exerciseModalText = modal.querySelector('#exerciseModalText');
-    exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + json.prevWkNumSets;
+    exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + previousWorkoutSetCount(json);
     modal.style.display = 'block'; //show add/del/etc dialog
 }
 
