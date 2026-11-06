@@ -15,6 +15,13 @@ const PROJECT_FOLDER = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONE_HOUR = 3600;
 const QUESTION_DIALOG_BUTTONS = ['yesNewWorkoutBtn', 'noNewWorkoutBtn', 'cancelDecidingNewWorkoutBtn'];
 const SETTINGS_DIALOG_BUTTONS = ['closeSettingsBtn', 'resetBtn'];
+const RESET_CONFIRMATION_BUTTONS = ['confirmResetBtn', 'cancelResetBtn'];
+const DIALOG_NAMES_BY_ID = {
+    exerciseActionsModal: 'add/del',
+    isItNewWorkoutModal: 'question',
+    settingsModal: 'settings',
+    resetConfirmationModal: 'reset confirmation',
+};
 
 export const pageMarkup = readFileSync(join(PROJECT_FOLDER, 'exercise.tracker.html'), 'utf8');
 
@@ -51,6 +58,7 @@ function runPageScripts(context) {
 function dialogHoldingButton(buttonId) {
     if (QUESTION_DIALOG_BUTTONS.includes(buttonId)) return 'isItNewWorkoutModal';
     if (SETTINGS_DIALOG_BUTTONS.includes(buttonId)) return 'settingsModal';
+    if (RESET_CONFIRMATION_BUTTONS.includes(buttonId)) return 'resetConfirmationModal';
     return 'exerciseActionsModal';
 }
 
@@ -89,12 +97,15 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
         now: () => now,
         waitSeconds: (seconds) => { now += seconds; },
 
-        /** Which screen is showing: 'list', 'add/del', 'question' or 'settings'. */
+        /** Every screen showing, such as 'list' or 'settings'. Two at once reads 'list + settings',
+         *  so a test fails if a dialog is left open behind another. */
         visibleScreen: () => {
-            if (element('exerciseActionsModal').style.display === 'block') return 'add/del';
-            if (element('isItNewWorkoutModal').style.display === 'block') return 'question';
-            if (element('settingsModal').style.display === 'block') return 'settings';
-            return element('exerciseListDiv').style.display === 'none' ? 'nothing' : 'list';
+            const listIsShowing = element('exerciseListDiv').style.display !== 'none';
+            const dialogsShowing = Object.entries(DIALOG_NAMES_BY_ID)
+                .filter(([id]) => element(id).style.display === 'block')
+                .map(([, name]) => name);
+            const screensShowing = listIsShowing ? ['list', ...dialogsShowing] : dialogsShowing;
+            return screensShowing.join(' + ') || 'nothing';
         },
 
         tapRow: (exerciseName) => {

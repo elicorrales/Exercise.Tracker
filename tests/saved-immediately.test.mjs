@@ -63,12 +63,15 @@ test('New Workout survives a browser kill straight after choosing it', () => {
     assert.equal(reopened.storedExercise('Bench').prevWkNumSets, 3);
 });
 
-test('Reset Everything is saved on the press', () => {
+test('a confirmed Reset Everything survives a browser kill straight after', () => {
     const app = loadApp();
     app.addSets('Bench', 3);
-    app.tapRow('Bench');
-    app.pressOnly('resetBtn');
-    assert.equal(reopenBrowser(app).setCount('Bench'), 0);
+    app.click('settingsBtn');
+    app.click('resetBtn');
+    app.click('confirmResetBtn');
+    const reopened = reopenBrowser(app);
+    assert.equal(reopened.setCount('Bench'), 0);
+    assert.equal(reopened.workoutTimeText(), '0s');
 });
 
 test('a reopened browser draws the same list', () => {

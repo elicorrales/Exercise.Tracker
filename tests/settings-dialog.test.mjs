@@ -53,13 +53,73 @@ test('the gear replaces an open dialog, and Close still returns to the list', ()
     }
 });
 
-test('Reset Everything clears the data and returns to the list', () => {
+const appAskingToConfirmReset = () => {
     const app = loadApp();
     app.addSets('Bench', 3);
     app.click('settingsBtn');
     app.click('resetBtn');
+    return app;
+};
+
+test('Reset Everything only asks, and changes nothing yet', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    app.click('settingsBtn');
+    const storedBefore = JSON.stringify([...app.store]);
+    app.pressOnly('resetBtn');
+    assert.equal(app.visibleScreen(), 'settings');
+    app.releaseOnly('resetBtn');
+    assert.equal(app.visibleScreen(), 'reset confirmation');
+    assert.equal(JSON.stringify([...app.store]), storedBefore);
+});
+
+test('Go Back from the confirmation returns to Settings and changes nothing', () => {
+    const app = appAskingToConfirmReset();
+    const storedBefore = JSON.stringify([...app.store]);
+    app.click('cancelResetBtn');
+    assert.equal(app.visibleScreen(), 'settings');
+    assert.equal(JSON.stringify([...app.store]), storedBefore);
+});
+
+test('pressing Yes without releasing on it resets nothing', () => {
+    const app = appAskingToConfirmReset();
+    const storedBefore = JSON.stringify([...app.store]);
+    app.pressOnly('confirmResetBtn');
+    assert.equal(app.visibleScreen(), 'reset confirmation');
+    assert.equal(JSON.stringify([...app.store]), storedBefore);
+});
+
+test('Yes clears the data and returns to the list straight away', () => {
+    const app = appAskingToConfirmReset();
+    app.click('confirmResetBtn');
     assert.equal(app.visibleScreen(), 'list');
     assert.equal(app.rowsOnScreen().find((row) => row.name === 'Bench').sets, 0);
+});
+
+test('the workout time shows 0s after a reset, not NaNs', () => {
+    const app = appAskingToConfirmReset();
+    app.click('confirmResetBtn');
+    assert.equal(app.workoutTimeText(), '0s');
+});
+
+test('the first tap after a reset does not ask the workout question', () => {
+    const app = appAskingToConfirmReset();
+    app.click('confirmResetBtn');
+    app.tapRow('Bench');
+    assert.equal(app.visibleScreen(), 'add/del');
+    app.click('addSetBtn');
+    assert.equal(app.setCount('Bench'), 1);
+});
+
+test('the gear replaces the confirmation too', () => {
+    const app = appAskingToConfirmReset();
+    app.click('settingsBtn');
+    assert.equal(app.visibleScreen(), 'settings');
+});
+
+test('a double tap on Reset Everything lands on Go Back, not Yes', () => {
+    const buttons = [...markupOfDialog('resetConfirmationModal').matchAll(/<label class="exerciseModalBtn" id="(\w+)"/g)].map((match) => match[1]);
+    assert.deepEqual(buttons, ['confirmResetBtn', 'cancelResetBtn']);
 });
 
 test('the add/del dialog holds only Add Set, Del Set and Cancel', () => {

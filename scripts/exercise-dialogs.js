@@ -1,5 +1,6 @@
 // exercise-dialogs.js
-// Shows and hides the dialogs: add/del, the "new or same workout" question, and Settings.
+// Shows and hides the dialogs: add/del, the "new or same workout" question, Settings, and
+// the reset confirmation.
 // Why it is its own file: which dialog is on screen is a separate job from what its buttons
 // do. Each dialog carries the exercise it was opened for in its data-exercise-name, and the
 // button handlers read that back.
@@ -40,6 +41,16 @@ showSettingsModalDialog = () => {
 
 hideSettingsModalDialog = () => {
     const modal = document.getElementById('settingsModal');
+    modal.style.display = 'none';
+}
+
+showResetConfirmationModalDialog = () => {
+    const modal = document.getElementById('resetConfirmationModal');
+    modal.style.display = 'block';
+}
+
+hideResetConfirmationModalDialog = () => {
+    const modal = document.getElementById('resetConfirmationModal');
     modal.style.display = 'none';
 }
 

@@ -13,9 +13,12 @@ eventHandlerCancelDecidingIsItNewWorkout = (what) => {
     what.style.backgroundColor = 'white';
 }
 
+//runs on release of Yes, so dragging off the button still cancels.
+//after clearing, the workout times are set up again as on a fresh load, and the screen is
+//redrawn from them, otherwise the timer shows NaNs and the next tap asks the workout question.
 eventHandlerResetLocalStorage = (what) => {
-    what.style.color = 'black';
-    what.style.backgroundColor = 'white';
+    what.style.color = 'white';
+    what.style.backgroundColor = 'black';
 
     globalExerciseListOfNames.forEach((exerciseName) => {
         localStorage.removeItem(exerciseName);
@@ -24,6 +27,29 @@ eventHandlerResetLocalStorage = (what) => {
     localStorage.removeItem('currentWorkoutStartedAtSeconds');
     localStorage.removeItem('currentWorkoutLatestSetAtSeconds');
     localStorage.removeItem('theLastExerciseSetAdded');
+
+    initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
+    displayWorkoutTime();
+    createDisplayableExerciseList();
+
+    hideResetConfirmationModalDialog();
+    document.getElementById('exerciseListDiv').style.display = 'block';
+}
+
+eventHandlerAskToConfirmReset = (what) => {
+    what.style.color = 'white';
+    what.style.backgroundColor = 'black';
+
+    hideSettingsModalDialog();
+    showResetConfirmationModalDialog();
+}
+
+eventHandlerGoBackToSettings = (what) => {
+    what.style.color = 'white';
+    what.style.backgroundColor = 'black';
+
+    hideResetConfirmationModalDialog();
+    showSettingsModalDialog();
 }
 
 //New Workout and Same Workout only highlight on press, and act on release. If they acted on
@@ -150,6 +176,7 @@ eventHandlerOpenSettings = (what) => {
     document.getElementById('exerciseListDiv').style.display = 'none';
     hideAddDelMoreCancelModalDialog();
     hideIsThisNewWorkoutModalDialog();
+    hideResetConfirmationModalDialog();
     showSettingsModalDialog();
 }
 

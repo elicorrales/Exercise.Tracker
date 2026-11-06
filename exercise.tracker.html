@@ -50,8 +50,21 @@
                 <p> <label class="exerciseModalBtn" id="closeSettingsBtn"
                         onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
                         onmouseup="eventHandlerReturnToListFromSettings(this)">Close</label><br /> </p>
-                <p> <label class="exerciseModalBtn" id="resetBtn" onmousedown="eventHandlerResetLocalStorage(this)"
-                        onmouseup="eventHandlerReturnToListFromSettings(this)">Reset Everything</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="resetBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerAskToConfirmReset(this)">Reset Everything</label><br /> </p>
+            </div>
+
+            <!-- keep the title to one line and Yes first: Go Back then sits where Reset Everything
+                 was, so an accidental double tap cannot confirm the reset -->
+            <div class="exerciseActionsModal" id="resetConfirmationModal" style="display: none;">
+                <p class="exerciseModalText">Reset all?</p>
+                <p> <label class="exerciseModalBtn" id="confirmResetBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerResetLocalStorage(this)">Yes, Reset</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="cancelResetBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackToSettings(this)">Go Back</label><br /> </p>
             </div>
 
             <div class="exerciseActionsModal" id="isItNewWorkoutModal" style="display: none;">
