@@ -27,8 +27,7 @@ showAddDelMoreCancelModalDialog = (exerciseName) => {
     modal.dataset.exerciseName = exerciseName;
 
     //in dialog , show exercise name and prev workout sets done
-    const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-    const json = JSON.parse(exerciseJsonFromLocalStorage);
+    const json = readStoredExercise(exerciseName);
     const exerciseModalText = modal.querySelector('#exerciseModalText');
     exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + previousWorkoutSetCount(json);
     modal.style.display = 'block'; //show add/del/etc dialog

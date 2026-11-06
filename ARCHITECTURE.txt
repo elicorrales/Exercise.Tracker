@@ -17,6 +17,8 @@ scripts/workout-time-limits.js ... The time spans workout decisions are built on
 scripts/exercise-names.js ........ The fixed exercise list. Replaced by user-managed
                                    exercises later.
 scripts/clock.js ................. The only place the app reads the system clock.
+scripts/exercise-storage.js ...... The only place exercise records are read or written.
+scripts/workout-time-storage.js .. The only place the workout's two times are stored.
 scripts/elapsed-time-text.js ..... Turns seconds into on-screen text such as 2.5h.
 scripts/exercise-row-colours.js .. Picks a row's colour from set count and age.
 scripts/workout-rules.js ......... Decides same workout, new workout, or ask, and rolls
@@ -106,8 +108,7 @@ the highest layer and loads last.
 4. Input ......... button-press-handlers
 3. Screen ........ exercise-list-display, exercise-dialogs, workout-time-display
 2. Decisions ..... workout-rules, exercise-row-colours, elapsed-time-text
-1. Foundations ... workout-time-limits, exercise-names, clock
+1. Foundations ... workout-time-limits, exercise-names, clock, exercise-storage,
+                   workout-time-storage
 
-Known seam erosion (craft rule 3.3): localStorage is read and written directly across
-layers 2, 3 and 4. A single stored-exercise layer belongs here before permanent exercise
-ids are built, because that change would otherwise touch every one of those files.
+Only the two storage files may touch localStorage (craft rule 3.3). A test enforces this.

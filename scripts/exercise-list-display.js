@@ -12,20 +12,7 @@ sortAllExercisesByElapsedTime = () => {
     //case we add a place holder for that exercise.
     let exerciseList = [];
     globalExerciseListOfNames.forEach((exerciseName) => {
-        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-        if (exerciseJsonFromLocalStorage !== null) {
-            exerciseList.push(JSON.parse(exerciseJsonFromLocalStorage));
-        } else {
-            const exercise = {
-                'name': 'name',
-                'setidx': 0,
-                'secList': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                'prevWkNumSets': 0,
-            };
-
-            exercise.name = exerciseName;
-            exerciseList.push(exercise);
-        }
+        exerciseList.push(readStoredExercise(exerciseName) ?? createBlankExercise(exerciseName));
     });
 
     exerciseList.sort((a, b) => {
@@ -58,22 +45,10 @@ createDisplayableExerciseList = () => {
 
 createDisplayableExercise = (exerciseName) => {
 
-    const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-
-    let exercise;
-    if (exerciseJsonFromLocalStorage !== null) {
-        exercise = JSON.parse(exerciseJsonFromLocalStorage);
-    } else {
-        exercise = {
-            'name': 'name',
-            'setidx': 0,
-            'secList': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            'prevWkNumSets': 0,
-        };
-
-        exercise.name = exerciseName;
-        const exerciseJsonString = JSON.stringify(exercise);
-        localStorage.setItem(exercise.name, exerciseJsonString);
+    let exercise = readStoredExercise(exerciseName);
+    if (exercise === null) {
+        exercise = createBlankExercise(exerciseName);
+        saveExercise(exercise);
     }
 
     //we have to calculate how many secs ago from current time was latest set, if possible

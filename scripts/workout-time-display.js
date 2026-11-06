@@ -5,8 +5,8 @@
 // It depends on elapsed-time-text.js.
 
 displayWorkoutTime = () => {
-    const wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
-    const wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
+    const wkStartAtSecs = readWorkoutStartedAtSeconds().toFixed(0);
+    const wkLatestSecs = readWorkoutLatestActivityAtSeconds().toFixed(0);
     const workoutTimeLabel = document.getElementById('currentWorkoutTime');
     workoutTimeLabel.innerHTML = createDisplayableSeconds(wkLatestSecs - wkStartAtSecs);
 }

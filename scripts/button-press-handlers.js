@@ -21,12 +21,10 @@ eventHandlerResetLocalStorage = (what) => {
     what.style.backgroundColor = 'black';
 
     globalExerciseListOfNames.forEach((exerciseName) => {
-        localStorage.removeItem(exerciseName);
+        removeStoredExercise(exerciseName);
     });
 
-    localStorage.removeItem('currentWorkoutStartedAtSeconds');
-    localStorage.removeItem('currentWorkoutLatestSetAtSeconds');
-    localStorage.removeItem('theLastExerciseSetAdded');
+    removeWorkoutTimes();
 
     initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
     displayWorkoutTime();
@@ -68,7 +66,7 @@ eventHandlerStartNewWorkout = (what) => {
 }
 
 eventHandlerContinueSameWorkout = (what) => {
-    localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
+    saveWorkoutLatestActivityAtSeconds(timeNowInSeconds());
     const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
     hideIsThisNewWorkoutModalDialog();
     showAddDelMoreCancelModalDialog(exerciseName);
@@ -77,12 +75,10 @@ eventHandlerContinueSameWorkout = (what) => {
 eventHandlerAddSet = (what) => {
     //grab data from dialog(overall parent)
     const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
-    localStorage.setItem('theLastExerciseSetAdded', exerciseName);
 
     adjustExerciseToBePartOfCurrentWorkoutAsNeeded(exerciseName);
 
-    const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-    const json = JSON.parse(exerciseJsonFromLocalStorage);
+    const json = readStoredExercise(exerciseName);
 
     //inc the current set and grab time of new set
     const len = json.secList.length;
@@ -97,7 +93,7 @@ eventHandlerAddSet = (what) => {
         json.secList[setidx] = timeNowInSeconds();
 
         //save the data
-        localStorage.setItem(exerciseName, JSON.stringify(json));
+        saveExercise(json);
 
     }
     what.style.color = 'black';
@@ -112,13 +108,12 @@ eventHandlerDelSet = (what) => {
     //grab data from dialog(overall parent)
     const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
 
-    const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-    const json = JSON.parse(exerciseJsonFromLocalStorage);
+    const json = readStoredExercise(exerciseName);
 
     removeLatestSetFromExercise(json);
 
     //save the data
-    localStorage.setItem(exerciseName, JSON.stringify(json));
+    saveExercise(json);
 
     what.style.color = 'black';
     what.style.backgroundColor = 'white';

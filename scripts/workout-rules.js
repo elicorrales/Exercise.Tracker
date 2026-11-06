@@ -2,29 +2,28 @@
 // Decides whether a tap belongs to the current workout, starts a new one, or must be asked
 // about, and rolls an exercise over into its previous-workout state.
 // Why it is its own file: this is the app's core judgement, and the Del Set fix and the
-// permanent exercise ids both build on it. It reads and writes localStorage directly.
-// It depends on workout-time-limits.js and clock.js.
+// permanent exercise ids both build on it.
+// It depends on workout-time-limits.js, clock.js and both storage files.
 
 initializeCurrentWorkoutTimesInLocalStorageAsNeeded = () => {
 
-    let wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
-    let wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
+    let wkStartAtSecs = readWorkoutStartedAtSeconds().toFixed(0);
+    let wkLatestSecs = readWorkoutLatestActivityAtSeconds().toFixed(0);
 
     if (wkStartAtSecs === null || wkStartAtSecs === 'NaN') { wkStartAtSecs = 0; }
     if (wkLatestSecs === null || wkLatestSecs === 'NaN') { wkLatestSecs = 0; }
 
     if (wkStartAtSecs == 0) {
-        localStorage.setItem('currentWorkoutStartedAtSeconds', 0);
-        localStorage.setItem('currentWorkoutLatestSetAtSeconds', 0);
+        saveWorkoutStartedAtSeconds(0);
+        saveWorkoutLatestActivityAtSeconds(0);
     }
 }
 
 adjustEverythingToStartNewWorkout = (exerciseName) => {
     //this means we the last set time, become the workout start time(weve moved up the workout start time)
     //actually this seems very similar to the FIRS TIME run.
-    localStorage.setItem('currentWorkoutStartedAtSeconds', timeNowInSeconds());
-    localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
-    localStorage.removeItem('theLastExerciseSetAdded');
+    saveWorkoutStartedAtSeconds(timeNowInSeconds());
+    saveWorkoutLatestActivityAtSeconds(timeNowInSeconds());
 
 }
 
@@ -41,7 +40,7 @@ isExerciseLastSetFromEarlierWorkout = (exercise) => {
         return false;
     }
 
-    const workoutStartedAtSeconds = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds'));
+    const workoutStartedAtSeconds = readWorkoutStartedAtSeconds();
     return !(lastSetSeconds >= workoutStartedAtSeconds);
 }
 
@@ -63,9 +62,7 @@ adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
 
     const timeNowSeconds = timeNowInSeconds();
 
-    const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-
-    const json = JSON.parse(exerciseJsonFromLocalStorage);
+    const json = readStoredExercise(exerciseName);
 
     //if the latest set belongs to this workout, the next set just continues the count
     if (!isExerciseLastSetFromEarlierWorkout(json)) {
@@ -84,7 +81,7 @@ adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
     json.secList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     json.prevWkNumSets = json.setidx;
     json.setidx = 0;
-    localStorage.setItem(exerciseName, JSON.stringify(json));
+    saveExercise(json);
 }
 
 //removes the latest set from an exercise record. the caller saves the record.
@@ -110,12 +107,11 @@ removeLatestSetFromExercise = (exercise) => {
 
 getExerciseLatestSetSeconds = (exerciseName) => {
     //we also have to look at the specific exercise times
-    const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-    if (exerciseJsonFromLocalStorage === null) {
+    const json = readStoredExercise(exerciseName);
+    if (json === null) {
         return 0;
     }
 
-    const json = JSON.parse(exerciseJsonFromLocalStorage);
     const setidx = parseInt(json.setidx);
 
     return json.secList[setidx];
@@ -124,8 +120,8 @@ getExerciseLatestSetSeconds = (exerciseName) => {
 doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded = (exerciseName) => {
 
     //we have to look at global workout time
-    let wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
-    let wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
+    let wkStartAtSecs = readWorkoutStartedAtSeconds().toFixed(0);
+    let wkLatestSecs = readWorkoutLatestActivityAtSeconds().toFixed(0);
     wkStartAtSecs = parseFloat(wkStartAtSecs).toFixed(0);
     wkLatestSecs = parseFloat(wkLatestSecs).toFixed(0);
 
@@ -135,9 +131,8 @@ doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsN
     //this could be the very first workout (start time is 0);
     // so we save the new start time, and it is also the time of the 1st set.
     if (wkStartAtSecs === null || wkStartAtSecs === NaN || wkStartAtSecs == 0 || (wkStartAtSecs > wkLatestSecs)) {
-        localStorage.setItem('currentWorkoutStartedAtSeconds', timeNowInSeconds());
-        localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
-        localStorage.removeItem('theLastExerciseSetAdded');
+        saveWorkoutStartedAtSeconds(timeNowInSeconds());
+        saveWorkoutLatestActivityAtSeconds(timeNowInSeconds());
         //that's it we're done for this go round
         return false;//we knew what to do, no need to ask user
     }
@@ -162,7 +157,7 @@ doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsN
         //if (isWorkoutUnderMaxTimeBetweenSets && (isExerciseLatestSecondsLessThanMaxTimeBetweenSets || isExerciseHaveZeroSetsZeroTime)) {
         if (isWorkoutUnderMaxTimeBetweenSets) {
             //still in current, just update the latest time
-            localStorage.setItem('currentWorkoutLatestSetAtSeconds', timeNowInSeconds());
+            saveWorkoutLatestActivityAtSeconds(timeNowInSeconds());
             //that's it we're done for this go round
             return false;//we knew what to do, no need to ask user
         }
