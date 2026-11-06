@@ -23,6 +23,7 @@ scripts/workout-rules.js ......... Decides same workout, new workout, or ask, an
                                    an exercise into its previous-workout state.
 scripts/exercise-list-display.js . Sorts and draws the main exercise list.
 scripts/exercise-dialogs.js ...... Shows and hides the two dialogs.
+scripts/button-press-handlers.js . What each button and row does on press and release.
 index2.html ............. Reference only. A browser "Save As" snapshot of the live page.
                           NEVER edited. Its visible dialog state is a snapshot artifact.
 index.html .............. Disregarded. Not part of this project.

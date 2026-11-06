@@ -1,9 +1,5 @@
 <html>
 
-<script>
-    const globalDefaultBackgroundColor = 'rgb(150, 148, 148)';
-</script>
-
 <script src="scripts/workout-time-limits.js"></script>
 <script src="scripts/exercise-names.js"></script>
 <script src="scripts/clock.js"></script>
@@ -12,6 +8,7 @@
 <script src="scripts/workout-rules.js"></script>
 <script src="scripts/exercise-list-display.js"></script>
 <script src="scripts/exercise-dialogs.js"></script>
+<script src="scripts/button-press-handlers.js"></script>
 
 <head>
     <link rel="stylesheet" href="exercise.tracker.css">
@@ -52,11 +49,11 @@
             <div class="exerciseActionsModal" id="isItNewWorkoutModal" style="display: none;">
                 <p class="exerciseModalText" id="isItNewWorkoutModalText"> Some Exercise Name Here </p>
                 <p> <label class="exerciseModalBtn" id="yesNewWorkoutBtn"
-                        onmousedown="eventHandlerStartNewWorkout(this)"
-                        onmouseup="eventHandlerFinishIsItNewWorkoutModalBtn(this)">New Workout</label><br /> </p>
+                        onmousedown="eventHandlerHighlightWorkoutChoiceBtn(this)"
+                        onmouseup="eventHandlerStartNewWorkout(this)">New Workout</label><br /> </p>
                 <p> <label class="exerciseModalBtn" id="noNewWorkoutBtn"
-                        onmousedown="eventHandlerContinueSameWorkout(this)"
-                        onmouseup="eventHandlerFinishIsItNewWorkoutModalBtn(this)">Same Workout</label><br /> </p>
+                        onmousedown="eventHandlerHighlightWorkoutChoiceBtn(this)"
+                        onmouseup="eventHandlerContinueSameWorkout(this)">Same Workout</label><br /> </p>
                 <p> <label class="exerciseModalBtn" id="cancelDecidingNewWorkoutBtn"
                         onmousedown="eventHandlerCancelDecidingIsItNewWorkout(this)"
                         onmouseup="eventHandlerGoBackFromIsItNewWorkoutModalBtn(this)">Go Back</label><br /> </p>
@@ -82,186 +79,6 @@
         //exercises and their sets and times will be manually updated right at load, then auto thereafter
         createDisplayableExerciseList();
         setInterval(createDisplayableExerciseList, 3000);
-    }
-
-    eventHandlerCancelDecidingIsItNewWorkout = (what) => {
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-    }
-
-    eventHandlerResetLocalStorage = (what) => {
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-
-        globalExerciseListOfNames.forEach((exerciseName) => {
-            localStorage.removeItem(exerciseName);
-        });
-
-        localStorage.removeItem('currentWorkoutStartedAtSeconds');
-        localStorage.removeItem('currentWorkoutLatestSetAtSeconds');
-        localStorage.removeItem('theLastExerciseSetAdded');
-    }
-
-    eventHandlerStartNewWorkout = (what) => {
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-
-        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
-        adjustEverythingToStartNewWorkout(exerciseName);
-        displayWorkoutTime();
-        hideIsThisNewWorkoutModalDialog();
-        showAddDelMoreCancelModalDialog(exerciseName);
-    }
-
-    eventHandlerContinueSameWorkout = (what) => {
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
-        hideIsThisNewWorkoutModalDialog();
-        showAddDelMoreCancelModalDialog(exerciseName);
-    }
-
-    eventHandlerAddSet = (what) => {
-        //grab data from dialog(overall parent)
-        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
-        localStorage.setItem('theLastExerciseSetAdded', exerciseName);
-
-        adjustExerciseToBePartOfCurrentWorkoutAsNeeded(exerciseName);
-
-        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-        const json = JSON.parse(exerciseJsonFromLocalStorage);
-
-        //inc the current set and grab time of new set
-        const len = json.secList.length;
-        let setidx = parseInt(json.setidx);
-
-        //we are limited to a certain number of sets
-        //after the limit, we do not save the next set
-        if ((setidx + 1) < len) {
-            setidx = setidx + 1;
-
-            json.setidx = setidx;
-            json.secList[setidx] = timeNowInSeconds();
-
-            //save the data
-            localStorage.setItem(exerciseName, JSON.stringify(json));
-
-        }
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-
-        displayWorkoutTime();
-        createDisplayableExerciseList();
-
-    }
-
-    eventHandlerDelSet = (what) => {
-        //grab data from dialog(overall parent)
-        const exerciseName = what.parentElement.parentElement.dataset.exerciseName;
-
-        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-        const json = JSON.parse(exerciseJsonFromLocalStorage);
-        const setidx = parseInt(json.setidx);
-
-        //if not already at first set, dec the current set
-        if (setidx > 0) {
-            json.setidx = setidx - 1;
-            //save the data
-            localStorage.setItem(exerciseName, JSON.stringify(json));
-        }
-
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-
-        displayWorkoutTime();
-        createDisplayableExerciseList();
-
-    }
-
-    eventHandlerCancelSet = (what) => {
-        what.style.color = 'black';
-        what.style.backgroundColor = 'white';
-    }
-
-    eventHandlerFinishExerciseActionsModalBtn = (what) => {
-
-        console.log('eventHandlerFinishExerciseActionsModalBtn');
-
-        what.style.color = 'white';
-        what.style.backgroundColor = 'black';
-
-        const modal = what.parentElement.parentElement;
-        modal.style.display = 'none';
-
-        //createDisplayableExerciseList();
-        const exerciseListDiv = document.getElementById('exerciseListDiv');
-        exerciseListDiv.style.display = 'block';
-    }
-
-
-    eventHandlerFinishIsItNewWorkoutModalBtn = (what) => {
-
-        console.log('eventHandlerFinishIsItNewWorkoutModalBtn');
-
-        what.style.color = 'white';
-        what.style.backgroundColor = 'black';
-
-        const modal = what.parentElement.parentElement;
-        modal.style.display = 'none';
-
-        //const exerciseName = modal.dataset.exerciseName;
-        //showAddDelMoreCancelModalDialog(exerciseName);
-    }
-
-    eventHandlerGoBackFromIsItNewWorkoutModalBtn = (what) => {
-
-        what.style.color = 'white';
-        what.style.backgroundColor = 'black';
-
-        const modal = what.parentElement.parentElement;
-        modal.style.display = 'none';
-
-        //createDisplayableExerciseList();
-        const exerciseListDiv = document.getElementById('exerciseListDiv');
-        exerciseListDiv.style.display = 'block';
-    }
-
-    //execiseDiv should act as a button and change background color
-    //to indicate press and release
-    eventHandlerExerciseDivPressed = (what) => {
-
-        console.log('eventHandlerExerciseDivPressed');
-
-        const exerciseDiv = what;//.parentElement;
-        exerciseDiv.style.color = 'white'; //'button' text - pressed
-        exerciseDiv.style.backgroundColor = 'dimgrey'; //'button' background
-    }
-
-    //execiseDiv should act as a button and change background color
-    //to indicate press and release
-    eventHandlerExerciseDivReleased = (what) => {
-
-        console.log('eventHandlerExerciseDivReleased');
-
-        const exerciseDiv = what;//.parentElement;
-        exerciseDiv.style.color = 'black'; //'button' text - released
-        exerciseDiv.style.backgroundColor = globalDefaultBackgroundColor;
-
-        const exerciseListDiv = document.getElementById('exerciseListDiv');
-        exerciseListDiv.style.display = 'none'; // hide the exercises list
-
-        const exerciseName = exerciseDiv.children[0].getAttribute('name');
-
-        if (doesUserHaveToBeAskedAsWeUpdateStoredCurrentWorkoutTimeAndPreviousWorkoutSetsAsNeeded(exerciseName)) {
-
-            hideAddDelMoreCancelModalDialog();
-            showIsThisNewWorkoutModalDialog(exerciseName);
-
-        } else {
-            hideIsThisNewWorkoutModalDialog();
-            showAddDelMoreCancelModalDialog(exerciseName);
-        }
-
     }
 
     displayWorkoutTime = () => {
