@@ -22,6 +22,7 @@ scripts/exercise-name-rules.js ... What a typed name may be, and how names are c
 scripts/page-text-escaping.js .... Makes typed text safe to place in the page's markup.
 scripts/rename-exercise-flow.js .. The rename screens: pick, type, keep or clear sets.
 scripts/add-exercise-flow.js ..... The Add screen: type a name, a new exercise joins the list.
+scripts/delete-exercise-flow.js .. The delete screens: pick an exercise, then confirm.
 scripts/elapsed-time-text.js ..... Turns seconds into on-screen text such as 2.5h.
 scripts/exercise-row-colours.js .. Picks a row's colour from set count and age.
 scripts/workout-rules.js ......... Decides same workout, new workout, or ask, and rolls
@@ -132,7 +133,8 @@ imports, so the tag order in exercise.tracker.html states this order. Top of thi
 the highest layer and loads last.
 
 5. Start ......... app-start
-4. Input ......... button-press-handlers, rename-exercise-flow, add-exercise-flow
+4. Input ......... button-press-handlers, rename-exercise-flow, add-exercise-flow,
+                   delete-exercise-flow
 3. Screen ........ exercise-list-display, exercise-dialogs, workout-time-display
 2. Decisions ..... workout-rules, exercise-name-rules, exercise-row-colours,
                    elapsed-time-text, page-text-escaping

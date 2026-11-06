@@ -129,11 +129,11 @@ test('the add/del dialog holds only Add Set, Del Set and Cancel', () => {
 
 test('Reset Everything comes last in the Settings dialog', () => {
     const buttons = [...markupOfDialog('settingsModal').matchAll(/<label class="exerciseModalBtn" id="(\w+)"/g)].map((match) => match[1]);
-    assert.deepEqual(buttons, ['closeSettingsBtn', 'addExerciseBtn', 'renameExerciseBtn', 'resetBtn']);
+    assert.deepEqual(buttons, ['closeSettingsBtn', 'addExerciseBtn', 'renameExerciseBtn', 'deleteExerciseBtn', 'resetBtn']);
 });
 
 test('every way back out of a dialog is labelled Go Back', () => {
-    for (const buttonId of ['cancelDecidingNewWorkoutBtn', 'closeSettingsBtn', 'cancelResetBtn', 'renamePickerBackBtn', 'renameEntryBackBtn', 'renameSetsBackBtn', 'addBackBtn']) {
+    for (const buttonId of ['cancelDecidingNewWorkoutBtn', 'closeSettingsBtn', 'cancelResetBtn', 'renamePickerBackBtn', 'renameEntryBackBtn', 'renameSetsBackBtn', 'addBackBtn', 'deletePickerBackBtn', 'cancelDeleteBtn']) {
         assert.match(pageMarkup, new RegExp(`id="${buttonId}"[^<]*>Go Back</label>`), buttonId);
     }
 });

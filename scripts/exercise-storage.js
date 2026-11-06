@@ -87,6 +87,16 @@ addStoredExercise = (exerciseName) => {
     localStorage.setItem(EXERCISE_CATALOG_KEY, JSON.stringify(catalog));
 }
 
+//the catalog is written first, so a browser killed between the two writes leaves only a
+//record nothing lists. the id counter is left alone, so this id is never given out again.
+deleteStoredExercise = (exerciseId) => {
+    const catalog = JSON.parse(localStorage.getItem(EXERCISE_CATALOG_KEY));
+    catalog.exerciseIds = catalog.exerciseIds.filter((otherExerciseId) => otherExerciseId !== exerciseId);
+    localStorage.setItem(EXERCISE_CATALOG_KEY, JSON.stringify(catalog));
+
+    localStorage.removeItem(storageKeyForExercise(exerciseId));
+}
+
 removeAllExercises = () => {
     readExerciseIds().forEach((exerciseId) => {
         localStorage.removeItem(storageKeyForExercise(exerciseId));

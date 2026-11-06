@@ -9,12 +9,7 @@
 // page-text-escaping.js, exercise-dialogs.js and exercise-list-display.js.
 
 const showRenamePicker = () => {
-    const rows = readExerciseIds().map((exerciseId) =>
-        `<p> <label class="exerciseModalBtn" name="` + exerciseId + `"
-            onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
-            onmouseup="eventHandlerPickExerciseToRename(this)">`
-            + escapeTextForPage(readStoredExercise(exerciseId).name) + `</label><br /> </p>`);
-    document.getElementById('renamePickerList').innerHTML = rows.join('\n');
+    document.getElementById('renamePickerList').innerHTML = exercisePickerRowsMarkup('eventHandlerPickExerciseToRename');
     document.getElementById('renamePickerModal').style.display = 'block';
 }
 

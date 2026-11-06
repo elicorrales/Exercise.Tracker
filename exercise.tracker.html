@@ -16,6 +16,7 @@
 <script src="scripts/button-press-handlers.js"></script>
 <script src="scripts/rename-exercise-flow.js"></script>
 <script src="scripts/add-exercise-flow.js"></script>
+<script src="scripts/delete-exercise-flow.js"></script>
 <script src="scripts/app-start.js"></script>
 
 <head>
@@ -62,6 +63,9 @@
                 <p> <label class="exerciseModalBtn" id="renameExerciseBtn"
                         onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
                         onmouseup="eventHandlerOpenRenamePicker(this)">Rename Exer</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="deleteExerciseBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerOpenDeletePicker(this)">Delete Exer</label><br /> </p>
                 <p> <label class="exerciseModalBtn" id="resetBtn"
                         onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
                         onmouseup="eventHandlerAskToConfirmReset(this)">Reset Everything</label><br /> </p>
@@ -114,6 +118,28 @@
                 <p> <label class="exerciseModalBtn" id="renameSetsBackBtn"
                         onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
                         onmouseup="eventHandlerGoBackFromRenameSets(this)">Go Back</label><br /> </p>
+            </div>
+
+            <div class="exerciseActionsModal" id="deletePickerModal" style="display: none;">
+                <p class="exerciseModalText">Delete:</p>
+                <p> <label class="exerciseModalBtn" id="deletePickerBackBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackFromDeletePicker(this)">Go Back</label><br /> </p>
+                <div id="deletePickerList">
+                    <!-- filled with one row per exercise when the picker opens -->
+                </div>
+            </div>
+
+            <!-- the title is the name alone, so Yes sits level with the picker's Go Back, above the
+                 picker's exercise rows, when the picker was not scrolled -->
+            <div class="exerciseActionsModal" id="deleteConfirmationModal" style="display: none;">
+                <p class="exerciseModalText" id="deleteConfirmationTitle"> Exercise Name Here </p>
+                <p> <label class="exerciseModalBtn" id="confirmDeleteBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerDeleteExercise(this)">Yes, Delete</label><br /> </p>
+                <p> <label class="exerciseModalBtn" id="cancelDeleteBtn"
+                        onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+                        onmouseup="eventHandlerGoBackFromDeleteConfirmation(this)">Go Back</label><br /> </p>
             </div>
 
             <!-- Reset Everything is the last Settings button, and this dialog has only two, so an

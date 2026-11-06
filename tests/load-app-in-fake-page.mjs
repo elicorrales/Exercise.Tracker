@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 const PROJECT_FOLDER = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ONE_HOUR = 3600;
 const QUESTION_DIALOG_BUTTONS = ['yesNewWorkoutBtn', 'noNewWorkoutBtn', 'cancelDecidingNewWorkoutBtn'];
-const SETTINGS_DIALOG_BUTTONS = ['closeSettingsBtn', 'addExerciseBtn', 'renameExerciseBtn', 'resetBtn'];
+const SETTINGS_DIALOG_BUTTONS = ['closeSettingsBtn', 'addExerciseBtn', 'renameExerciseBtn', 'deleteExerciseBtn', 'resetBtn'];
 const RESET_CONFIRMATION_BUTTONS = ['confirmResetBtn', 'cancelResetBtn'];
 const DIALOG_NAMES_BY_ID = {
     exerciseActionsModal: 'add/del',
@@ -25,6 +25,8 @@ const DIALOG_NAMES_BY_ID = {
     renameEntryModal: 'rename entry',
     renameSetsModal: 'rename sets question',
     addExerciseModal: 'add exercise',
+    deletePickerModal: 'delete picker',
+    deleteConfirmationModal: 'delete confirmation',
 };
 
 export const pageMarkup = readFileSync(join(PROJECT_FOLDER, 'exercise.tracker.html'), 'utf8');
@@ -71,6 +73,9 @@ function attributeFunctionName(buttonId, eventName) {
     return new RegExp(`${eventName}="(\\w+)\\(this\\)"`).exec(fromButton)[1];
 }
 
+const exerciseNamesInPickerMarkup = (pickerMarkup) =>
+    [...pickerMarkup.matchAll(/<label[^>]*>([^<]+)<\/label>/g)].map((match) => match[1]);
+
 export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) {
     let now = nowSeconds;
     class FakeDate extends Date {
@@ -93,6 +98,12 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
         const button = element(buttonId);
         button.parentElement = { parentElement: element(dialogHoldingButton(buttonId)) };
         context[attributeFunctionName(buttonId, eventName)](button);
+    };
+
+    const releasePickerRow = (pickerMarkup, exerciseId) => {
+        const rowMarkup = pickerMarkup.split('<label').find((row) => row.includes(`name="${exerciseId}"`));
+        const releaseFunction = /onmouseup="(\w+)\(this\)"/.exec(rowMarkup)[1];
+        context[releaseFunction]({ style: {}, getAttribute: () => exerciseId });
     };
 
     const app = {
@@ -154,15 +165,13 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
         dialogExerciseId: (dialogId) => element(dialogId).dataset.exerciseId,
         listMarkup: () => element('exerciseListDiv').innerHTML,
 
-        /** The rename picker's rows, read from the markup the app really wrote. */
+        /** The picker rows, read from the markup the app really wrote. */
         pickerMarkup: () => element('renamePickerList').innerHTML,
-        exercisesInPicker: () => [...app.pickerMarkup().matchAll(/<label[^>]*>([^<]+)<\/label>/g)].map((match) => match[1]),
-        pickExerciseToRename: (exerciseName) => {
-            const exerciseId = app.exerciseId(exerciseName);
-            const rowMarkup = app.pickerMarkup().split('<label').find((row) => row.includes(`name="${exerciseId}"`));
-            const releaseFunction = /onmouseup="(\w+)\(this\)"/.exec(rowMarkup)[1];
-            context[releaseFunction]({ style: {}, getAttribute: () => exerciseId });
-        },
+        deletePickerMarkup: () => element('deletePickerList').innerHTML,
+        exercisesInPicker: () => exerciseNamesInPickerMarkup(app.pickerMarkup()),
+        exercisesInDeletePicker: () => exerciseNamesInPickerMarkup(app.deletePickerMarkup()),
+        pickExerciseToRename: (exerciseName) => releasePickerRow(app.pickerMarkup(), app.exerciseId(exerciseName)),
+        pickExerciseToDelete: (exerciseName) => releasePickerRow(app.deletePickerMarkup(), app.exerciseId(exerciseName)),
         typeNewName: (typedName) => { element('renameNameInput').value = typedName; },
         typedName: () => element('renameNameInput').value,
         renameMessage: () => element('renameMessage').innerHTML,
@@ -170,6 +179,7 @@ export function loadApp({ store = new Map(), nowSeconds = 1_800_000_000 } = {}) 
         exerciseToAdd: () => element('addNameInput').value,
         addMessage: () => element('addMessage').innerHTML,
         renameTitle: () => element('renameSetsTitle').innerHTML,
+        deleteTitle: () => element('deleteConfirmationTitle').innerHTML,
         saveButtonText: () => element('keepSetsBtn').innerHTML,
         clearButtonIsOffered: () => element('clearSetsRow').style.display !== 'none',
         workoutTimeText: () => element('currentWorkoutTime').innerHTML,

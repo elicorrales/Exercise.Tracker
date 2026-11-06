@@ -59,9 +59,21 @@ const resetButtonColours = (button) => {
     button.style.backgroundColor = 'black';
 }
 
+//one row per exercise for a picker dialog. each row carries the exercise's id, and calls
+//the named handler on release.
+exercisePickerRowsMarkup = (releaseHandlerName) => {
+    const rows = readExerciseIds().map((exerciseId) =>
+        `<p> <label class="exerciseModalBtn" name="` + exerciseId + `"
+            onmousedown="eventHandlerHighlightSettingsDialogBtn(this)"
+            onmouseup="` + releaseHandlerName + `(this)">`
+            + escapeTextForPage(readStoredExercise(exerciseId).name) + `</label><br /> </p>`);
+    return rows.join('\n');
+}
+
 hideEveryDialog = () => {
     ['exerciseActionsModal', 'isItNewWorkoutModal', 'settingsModal', 'resetConfirmationModal',
-        'renamePickerModal', 'renameEntryModal', 'renameSetsModal', 'addExerciseModal'].forEach((dialogId) => {
+        'renamePickerModal', 'renameEntryModal', 'renameSetsModal', 'addExerciseModal',
+        'deletePickerModal', 'deleteConfirmationModal'].forEach((dialogId) => {
         document.getElementById(dialogId).style.display = 'none';
     });
 }
