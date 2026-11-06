@@ -11,6 +11,7 @@
 <script src="scripts/exercise-row-colours.js"></script>
 <script src="scripts/workout-rules.js"></script>
 <script src="scripts/exercise-list-display.js"></script>
+<script src="scripts/exercise-dialogs.js"></script>
 
 <head>
     <link rel="stylesheet" href="exercise.tracker.css">
@@ -261,45 +262,6 @@
             showAddDelMoreCancelModalDialog(exerciseName);
         }
 
-    }
-
-    showIsThisNewWorkoutModalDialog = (exerciseName) => {
-        const modal = document.getElementById('isItNewWorkoutModal');
-        const yesBtn = modal.querySelector('#yesNewWorkoutBtn');
-        yesBtn.style.color = 'white';
-        yesBtn.style.backgroundColor = 'black';
-        const noBtn = modal.querySelector('#noNewWorkoutBtn');
-        noBtn.style.color = 'white';
-        noBtn.style.backgroundColor = 'black';
-        const canBtn = modal.querySelector('#cancelDecidingNewWorkoutBtn');
-        canBtn.style.color = 'white';
-        canBtn.style.backgroundColor = 'black';
-        modal.style.display = 'block'; //show is it a new workout dialog
-        modal.dataset.exerciseName = exerciseName;
-        const isItNewWorkoutModalText = modal.querySelector('#isItNewWorkoutModalText');
-        isItNewWorkoutModalText.innerHTML = exerciseName;
-    }
-
-    showAddDelMoreCancelModalDialog = (exerciseName) => {
-        const modal = document.getElementById('exerciseActionsModal');
-        modal.dataset.exerciseName = exerciseName;
-
-        //in dialog , show exercise name and prev workout sets done
-        const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
-        const json = JSON.parse(exerciseJsonFromLocalStorage);
-        const exerciseModalText = modal.querySelector('#exerciseModalText');
-        exerciseModalText.innerHTML = json.name + '<br/>Prev Wk Sets:' + json.prevWkNumSets;
-        modal.style.display = 'block'; //show add/del/etc dialog
-    }
-
-    hideAddDelMoreCancelModalDialog = () => {
-        const modal = document.getElementById('exerciseActionsModal');
-        modal.style.display = 'none';
-    }
-
-    hideIsThisNewWorkoutModalDialog = () => {
-        const modal = document.getElementById('isItNewWorkoutModal');
-        modal.style.display = 'none';
     }
 
     displayWorkoutTime = () => {

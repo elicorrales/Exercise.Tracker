@@ -22,6 +22,7 @@ scripts/exercise-row-colours.js .. Picks a row's colour from set count and age.
 scripts/workout-rules.js ......... Decides same workout, new workout, or ask, and rolls
                                    an exercise into its previous-workout state.
 scripts/exercise-list-display.js . Sorts and draws the main exercise list.
+scripts/exercise-dialogs.js ...... Shows and hides the two dialogs.
 index2.html ............. Reference only. A browser "Save As" snapshot of the live page.
                           NEVER edited. Its visible dialog state is a snapshot artifact.
 index.html .............. Disregarded. Not part of this project.
