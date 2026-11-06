@@ -27,6 +27,16 @@ test('Del Set is saved on the press, before the release', () => {
     assert.equal(reopenBrowser(app).setCount('Bench'), 1);
 });
 
+test('Del of the only set of a new workout is saved on the press', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    app.waitSeconds(86400);
+    app.addSet('Bench');
+    app.tapRow('Bench');
+    app.pressOnly('delSetBtn');
+    assert.equal(reopenBrowser(app).setCount('Bench'), 3);
+});
+
 test('Same Workout survives a browser kill straight after choosing it', () => {
     const app = loadApp();
     app.addSets('Bench', 3);

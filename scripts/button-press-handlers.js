@@ -88,14 +88,11 @@ eventHandlerDelSet = (what) => {
 
     const exerciseJsonFromLocalStorage = localStorage.getItem(exerciseName);
     const json = JSON.parse(exerciseJsonFromLocalStorage);
-    const setidx = parseInt(json.setidx);
 
-    //if not already at first set, dec the current set
-    if (setidx > 0) {
-        json.setidx = setidx - 1;
-        //save the data
-        localStorage.setItem(exerciseName, JSON.stringify(json));
-    }
+    removeLatestSetFromExercise(json);
+
+    //save the data
+    localStorage.setItem(exerciseName, JSON.stringify(json));
 
     what.style.color = 'black';
     what.style.backgroundColor = 'white';

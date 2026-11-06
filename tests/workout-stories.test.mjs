@@ -172,3 +172,97 @@ test('a never-trained exercise shows no previous sets', () => {
     app.tapRow('Bench');
     assert.match(app.dialogText(), /Prev Wk Sets:0$/);
 });
+
+// Deleting the only set of a new workout returns the exercise to how it stood before it.
+const startNewWorkoutWithOneSet = (app, exerciseName) => {
+    app.waitSeconds(ONE_DAY);
+    app.addSet(exerciseName);
+};
+const delLatestSet = (app, exerciseName) => {
+    app.tapRow(exerciseName);
+    app.click('delSetBtn');
+};
+const rowFor = (app, exerciseName) => app.rowsOnScreen().find((row) => row.name === exerciseName);
+
+test('Del of the only set brings back the previous workout row', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    app.waitSeconds(3 * ONE_HOUR);
+    app.tapRow('Bench');
+    app.click('yesNewWorkoutBtn');
+    app.click('addSetBtn');
+    assert.equal(app.setCount('Bench'), 1);
+    app.tapRow('Bench');
+    app.click('delSetBtn');
+    const row = rowFor(app, 'Bench');
+    assert.equal(row.sets, 3);
+    assert.equal(row.elapsed, '3.0h');
+    assert.equal(row.colour, 'gold');
+});
+
+test('Del of the only set brings back the count from two workouts ago as well', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    startNewWorkoutWithOneSet(app, 'Bench');
+    app.addSet('Bench');
+    startNewWorkoutWithOneSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    assert.equal(app.setCount('Bench'), 2);
+    assert.equal(app.storedExercise('Bench').prevWkNumSets, 3);
+});
+
+test('after the restore, the dialog shows the restored workout as previous', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    startNewWorkoutWithOneSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    app.tapRow('Bench');
+    assert.match(app.dialogText(), /Prev Wk Sets:3$/);
+});
+
+test('Add Set after the restore starts the new workout again', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    startNewWorkoutWithOneSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    app.addSet('Bench');
+    assert.equal(app.setCount('Bench'), 1);
+    assert.equal(app.storedExercise('Bench').prevWkNumSets, 3);
+});
+
+test('deleting back through a two set workout reaches the previous workout', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    startNewWorkoutWithOneSet(app, 'Bench');
+    app.addSet('Bench');
+    delLatestSet(app, 'Bench');
+    assert.equal(app.setCount('Bench'), 1);
+    delLatestSet(app, 'Bench');
+    assert.equal(app.setCount('Bench'), 3);
+});
+
+test('Del of the only set of the first ever workout really is never done', () => {
+    const app = loadApp();
+    app.addSet('Bench');
+    delLatestSet(app, 'Bench');
+    const row = rowFor(app, 'Bench');
+    assert.equal(row.sets, 0);
+    assert.equal(row.colour, 'lightgrey');
+});
+
+test('Del with no sets at all changes nothing', () => {
+    const app = loadApp();
+    delLatestSet(app, 'Bench');
+    assert.equal(app.setCount('Bench'), 0);
+});
+
+test('a restore happens once, so deleting on down does not bring the old count back again', () => {
+    const app = loadApp();
+    app.addSets('Bench', 3);
+    startNewWorkoutWithOneSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    delLatestSet(app, 'Bench');
+    assert.equal(app.setCount('Bench'), 0);
+});

@@ -72,13 +72,40 @@ adjustExerciseToBePartOfCurrentWorkoutAsNeeded = (exerciseName) => {
         return;
     }
 
+    // we keep the state being replaced, so deleting the only set of this workout can restore it
     // we also have to update the latest set idx as the prev workout set
     // we also have to clear the array of current set seconds
     // and finally store all that back to local storage
+    json.stateBeforeThisWorkout = {
+        'setidx': json.setidx,
+        'secList': json.secList,
+        'prevWkNumSets': json.prevWkNumSets,
+    };
     json.secList = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     json.prevWkNumSets = json.setidx;
     json.setidx = 0;
     localStorage.setItem(exerciseName, JSON.stringify(json));
+}
+
+//removes the latest set from an exercise record. the caller saves the record.
+//deleting the only set of a workout puts the exercise back as it stood before that workout,
+//so it never looks like it was never done. with no earlier workout, it really is at zero.
+removeLatestSetFromExercise = (exercise) => {
+    const setidx = parseInt(exercise.setidx);
+
+    if (setidx === 1 && exercise.stateBeforeThisWorkout) {
+        const earlierState = exercise.stateBeforeThisWorkout;
+        exercise.setidx = earlierState.setidx;
+        exercise.secList = earlierState.secList;
+        exercise.prevWkNumSets = earlierState.prevWkNumSets;
+        delete exercise.stateBeforeThisWorkout;
+        return;
+    }
+
+    //if not already at first set, dec the current set
+    if (setidx > 0) {
+        exercise.setidx = setidx - 1;
+    }
 }
 
 getExerciseLatestSetSeconds = (exerciseName) => {
