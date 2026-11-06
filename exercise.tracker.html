@@ -8,7 +8,9 @@
 <script src="scripts/workout-rules.js"></script>
 <script src="scripts/exercise-list-display.js"></script>
 <script src="scripts/exercise-dialogs.js"></script>
+<script src="scripts/header-times-display.js"></script>
 <script src="scripts/button-press-handlers.js"></script>
+<script src="scripts/app-start.js"></script>
 
 <head>
     <link rel="stylesheet" href="exercise.tracker.css">
@@ -64,36 +66,5 @@
     </strong>
 </body>
 
-<script>
-    window.onload = function () {
-
-        //current time only updates automatically
-        setInterval(displayCurrentTime, 1000);
-
-        initializeCurrentWorkoutTimesInLocalStorageAsNeeded();
-
-        //workout time will be manually updates right at load, then auto thereafter
-        displayWorkoutTime();
-        setInterval(displayWorkoutTime, 2500);
-
-        //exercises and their sets and times will be manually updated right at load, then auto thereafter
-        createDisplayableExerciseList();
-        setInterval(createDisplayableExerciseList, 3000);
-    }
-
-    displayWorkoutTime = () => {
-        const wkStartAtSecs = parseFloat(localStorage.getItem('currentWorkoutStartedAtSeconds')).toFixed(0);
-        const wkLatestSecs = parseFloat(localStorage.getItem('currentWorkoutLatestSetAtSeconds')).toFixed(0);
-        const workoutTimeLabel = document.getElementById('currentWorkoutTime');
-        workoutTimeLabel.innerHTML = createDisplayableSeconds(wkLatestSecs - wkStartAtSecs);
-    }
-
-    displayCurrentTime = () => {
-        let currentTime = getCurrentTime();
-        document.getElementById('currentTime').innerHTML =
-            ((currentTime.hours   < 10) ? '0' : '') + `${currentTime.hours}:` + ((currentTime.minutes < 10) ? '0' : '') + `${currentTime.minutes}`;
-    }
-
-</script>
 
 </html>
