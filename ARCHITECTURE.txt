@@ -54,6 +54,34 @@ address, including http versus https.
   index2.html's stored data.
 
 
+PROJECT LAWS
+-------------------------------------------------------------------------------------
+1. EVERY USER CHOICE IS SAVED THE MOMENT IT IS MADE. The owner's words: "i can not control
+   when a user will kill the browser (on phone)". Add, Del, New, Same, and later creating,
+   renaming and deleting an exercise all write to localStorage immediately, in the same
+   handler. Nothing waits for a later save, a timer, or the page closing. Stored data is
+   the only truth, and no copy of it is kept in memory between actions. Any future storage
+   layer must write through. Pinned by tests/saved-immediately.test.mjs. Every new user
+   action gets a test there.
+
+
+TESTS
+-------------------------------------------------------------------------------------
+Run from the project folder (Node only, nothing to install):
+
+    node --test
+
+tests/load-app-in-fake-page.mjs runs the real scripts and real button attributes against a
+fake clock, storage and page. It cannot show layout, so the owner's host test still matters.
+
+
+PINNED QUESTIONS (decided later, not forgotten)
+-------------------------------------------------------------------------------------
+- RENDER ROOT ADDRESS. Render serves index.html at the site root. The app is
+  exercise.tracker.html, so it needs either the full path in the address or a Render
+  rewrite rule. Must be decided at the Render deploy step.
+
+
 DECISIONS
 -------------------------------------------------------------------------------------
 - Plain <script src> tags, not JavaScript modules. The existing code relies on implicit
